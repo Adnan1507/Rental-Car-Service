@@ -5,9 +5,10 @@ namespace Rental.Repository
 {
     public class CompanyRepository : BaseRepository<Company>, ICompanyRepository
     {
-        private readonly CompanyContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CompanyRepository(CompanyContext context) : base(context)
+
+        public CompanyRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

@@ -6,10 +6,10 @@ namespace Rental.Repository
     // This is a base class that implements the common CRUD logic
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
-        protected readonly CompanyContext _context;
+        protected readonly ApplicationDbContext _context;
         protected readonly DbSet<TEntity> _dbSet;
 
-        public BaseRepository(CompanyContext context)
+        public BaseRepository(ApplicationDbContext context)
         {
             _context = context;
             _dbSet = _context.Set<TEntity>();

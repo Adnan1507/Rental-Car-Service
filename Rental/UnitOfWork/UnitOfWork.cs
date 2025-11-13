@@ -5,9 +5,9 @@ namespace Rental.UnitOfWork
 {
     public class UnitOfWork : IUnitofWork
     {
-        private readonly CompanyContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public UnitOfWork(CompanyContext context)
+        public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             Companies = new CompanyRepository(_context);

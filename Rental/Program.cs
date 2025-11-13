@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Rental.Models;
 using Rental.Repository;
 using Rental.UnitOfWork;
@@ -6,8 +7,13 @@ using Rental.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<CompanyContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 
 // Register our repository and UnitOfWork in the DI container
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -32,6 +38,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

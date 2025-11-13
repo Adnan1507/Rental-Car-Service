@@ -1,0 +1,114 @@
+﻿@model Rental.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h2 class="mb-4">Create an Account</h2>
+
+<form asp-action="Register" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!-- Role selection cards -->
+    <div class="mb-3">
+        <label class="form-label">Choose Account Type</label>
+        <div class="d-flex gap-3">
+            <div class="role-card border rounded p-3 flex-fill text-center"
+                 data-role="Renter">
+                <h4>Renter</h4>
+                <p>Rent cars from hosts</p>
+            </div>
+            <div class="role-card border rounded p-3 flex-fill text-center"
+                 data-role="Host">
+                <h4>Car Host</h4>
+                <p>List your cars for rent</p>
+            </div>
+        </div>
+        <input type="hidden" asp-for="RoleType" />
+        <span asp-validation-for="RoleType" class="text-danger"></span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="mb-3">
+                <label asp-for="NIDImage" class="form-label"></label>
+                <input asp-for="NIDImage" class="form-control" type="file" />
+                <span asp-validation-for="NIDImage" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LicenseImage" class="form-label"></label>
+                <input asp-for="LicenseImage" class="form-control" type="file" />
+                <span asp-validation-for="LicenseImage" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ProfileImage" class="form-label"></label>
+                <input asp-for="ProfileImage" class="form-control" type="file" />
+                <span asp-validation-for="ProfileImage" class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Register</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const cards = document.querySelectorAll('.role-card');
+        const roleInput = document.querySelector('input[name="RoleType"]');
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                cards.forEach(c => c.classList.remove('border-primary', 'bg-light'));
+                card.classList.add('border-primary', 'bg-light');
+                const role = card.getAttribute('data-role');
+                roleInput.value = role;
+            });
+        });
+    </script>
+}
