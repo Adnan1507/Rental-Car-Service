@@ -1,0 +1,25 @@
+Database name: CarRental
+
+1) Renter Registration — 
+
+Full Name:
+Email:
+Phone Number:
+Address:
+NID Picture:
+License Picture:
+Profile Picture:
+Password:
+
+2) Car Host Registration — 
+
+Full Name:
+Email:
+Phone Number:
+NID Picture:
+License Picture:
+Profile Picture:
+Password:
+
+var adminEmail = "admin@rental.com";
+var adminPassword = "Admin@123";

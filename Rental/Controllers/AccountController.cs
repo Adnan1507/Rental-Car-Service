@@ -99,6 +99,72 @@ namespace Rental.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // Shows the login page to the user
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // Handles login form submission
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            // Step 1: Check if form values follow validation
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Step 2: Try to find user by email
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                // Show generic error (avoid telling user that email does not exist)
+                ModelState.AddModelError("", "Invalid email or password.");
+                return View(model);
+            }
+
+            // Step 3: Check if password is correct
+            var result = await _signInManager.PasswordSignInAsync(
+                user,
+                model.Password,
+                model.RememberMe,
+                lockoutOnFailure: false
+            );
+
+            // Step 4: Successfully logged in → Redirect based on role
+            if (result.Succeeded)
+            {
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    return RedirectToAction("AdminDashboard", "Home");
+
+                if (await _userManager.IsInRoleAsync(user, "Host"))
+                    return RedirectToAction("HostDashboard", "Home");
+
+                if (await _userManager.IsInRoleAsync(user, "Renter"))
+                    return RedirectToAction("RenterDashboard", "Home");
+
+                // Default fallback if somehow role missing
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Step 5: Wrong password or login failed
+            ModelState.AddModelError("", "Invalid login attempt.");
+            return View(model);
+        }
+
+        // Logs the user out and redirects to Home page
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
 
         // Helper: Save uploaded file and return relative path
         private async Task<string> SaveFileAsync(IFormFile file, string subFolder)

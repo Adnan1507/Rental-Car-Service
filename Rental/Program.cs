@@ -25,6 +25,14 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// SEED ADMIN USER
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    await Rental.Data.DbInitializer.SeedAdminUser(roleManager, userManager);
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
