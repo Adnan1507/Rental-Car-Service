@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Rental.Models;
 using Rental.Repository;
+using Rental.Services;
 using Rental.UnitOfWork;
 
 
@@ -22,6 +23,9 @@ builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
 
 var app = builder.Build();
 
