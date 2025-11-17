@@ -8,16 +8,15 @@
     html, body {
         height: 100%;
         margin: 0;
-        overflow: hidden; /* remove scroll bar */
+        
     }
 
     section.vh-100 {
-        height: 100vh;
         overflow: hidden;
     }
 
     .left-panel {
-        height: 100vh;
+
         display: flex;
         flex-direction: column;
         justify-content: flex-start; /* logo at top */
@@ -41,83 +40,74 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.js"></script>
 
-<section class="vh-100">
-    <div class="container-fluid h-100">
-        <div class="row h-100">
+<section style="
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:#303030;
+">
+
+    <div class="card shadow-lg"
+         style="
+            border-radius: 30px;
+            overflow: hidden;
+            width: 98%;
+            max-width: 2000px;
+            height: 85vh;
+            background: #D9D9D9;
+         ">
+
+        <div class="row g-0" style="height:100%;">
 
             <!-- LEFT SIDE -->
-            <div class="col-sm-6 text-black left-panel">
+            <div class="col-6 text-black d-flex flex-column justify-content-center" style="padding:60px;">
 
-                <!-- LOGO TOP‑LEFT -->
-                <div class="px-3 d-flex align-items-center mb-2">
+                <div class="d-flex align-items-center mb-4"
+                     style="margin-top:-100px; margin-left:-20px;">
+
                     <i class="fas fa-car-side fa-2x me-3" style="color:#FFB800;"></i>
-                    <span style="
-                        font-size: 40px;
-                        font-weight: 800;
-                        letter-spacing: 1px;
-                        font-family: 'Poppins', sans-serif;
-                        color: #111;">
+                    <span style="font-size:60px; font-weight:800; font-family:'Poppins';">
                         Vroomly <span style="color:#FFB800;">Rentals</span>
                     </span>
                 </div>
 
-                <!-- LOGIN FORM -->
-                <div class="login-wrapper px-5 ms-xl-4">
-                    <form asp-action="Login" method="post" style="width: 23rem;">
+                <form asp-action="Login" method="post" style="max-width:28rem; margin-top:50px;">
 
-                        <h1 style="
-                            font-size: 34px;
-                            font-weight: 800;
-                            color: #00AEEF;
-                            font-family: 'Poppins', sans-serif;
-                            margin-bottom: 25px;">
-                            Log in
-                        </h1>
+                    <h1 style="font-size:36px; font-weight:800; color:#00AEEF; margin-bottom:25px;">Log in</h1>
 
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <div class="mb-3">
+                        <input asp-for="Email" class="form-control form-control-lg" placeholder="Enter your email" />
+                    </div>
 
-                        <div class="mb-4">
-                            
-                            <input asp-for="Email" type="email" class="form-control form-control-lg" placeholder="Enter your email" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
+                    <div class="mb-3">
+                        <input asp-for="Password" class="form-control form-control-lg" placeholder="Enter your password" />
+                    </div>
 
-                        <div class="mb-4">
-                            
-                            <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Enter your password" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
+                    <div class="form-check mb-4">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                    </div>
 
-                        <div class="form-check mb-4">
-                            <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label">Remember me</label>
-                        </div>
+                    <button type="submit" class="btn btn-info btn-lg w-100">LOGIN</button>
 
-                        <div class="pt-1 mb-4">
-                            <button type="submit" class="btn btn-info btn-lg btn-block w-100">Login</button>
-                        </div>
+                    <p class="small mt-3"><a asp-action="ForgotPassword">Forgot password?</a></p>
+                    <p>Don't have an account? <a asp-controller="Account" asp-action="Register">Register here</a></p>
 
-                        <p class="small mb-3">
-                            <a class="text-muted" asp-action="ForgotPassword">Forgot password?</a>
-                        </p>
-
-                        <p>
-                            Don't have an account?
-                            <a asp-controller="Account" asp-action="Register" class="link-info">Register here</a>
-                        </p>
-                    </form>
-                </div>
+                </form>
             </div>
 
             <!-- RIGHT SIDE -->
-            <div class="col-sm-6 px-0 d-none d-sm-block">
+            <div class="col-6 px-0 d-flex align-items-stretch">
                 <img src="/images/login-bg.jpg"
-                     class="w-100 h-100"
-                     style="object-fit: cover; object-position: center;" />
+                     style="width:100%; height:100%; object-fit:cover; object-position:center; display:block;">
             </div>
+
         </div>
+
     </div>
 </section>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
