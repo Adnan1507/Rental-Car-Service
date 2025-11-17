@@ -29,3 +29,7 @@ Server=100.102.91.108,56151
 
 //"DefaultConnection": "Server=localhost\\SQLEXPRESS ;Database=CarRental;Trusted_Connection=True;TrustServerCertificate=true;",
     "DefaultConnection": "Server=100.102.91.108,56151;Database=CarRental;User ID=Adnan;Password=TempPassword123!;TrustServerCertificate=true;Encrypt=false;",
+
+
+Mail: adnanshamim1507@gmail.com
+App Password: dikx rjti zkkf hknx

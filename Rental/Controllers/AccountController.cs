@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+//using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Rental.Models;
 using Rental.ViewModels;
+using Rental.Services;
+
 
 namespace Rental.Controllers
 {
@@ -206,26 +208,36 @@ namespace Rental.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            // Try to find user by email
             var user = await _userManager.FindByEmailAsync(model.Email);
 
+            // If email is not registered, show error instead of redirecting
             if (user == null)
-                return RedirectToAction("ForgotPasswordConfirmation");
+            {
+                ModelState.AddModelError("", "This email is not registered.");
+                return View(model);
+            }
 
+            // Generate token
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
+            // Create reset link
             var callbackUrl = Url.Action(
                 "ResetPassword",
                 "Account",
                 new { token, email = user.Email },
                 protocol: HttpContext.Request.Scheme);
 
+            // Send email
             await _emailSender.SendEmailAsync(
                 user.Email,
                 "Reset Password",
                 $"Please reset your password by clicking here: <a href='{callbackUrl}'>Reset Password</a>");
 
+            // Go to confirmation page
             return RedirectToAction("ForgotPasswordConfirmation");
         }
+
 
         [HttpGet]
         public IActionResult ResetPassword(string token, string email)
@@ -257,6 +269,18 @@ namespace Rental.Controllers
 
             return View(model);
         }
+
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+
 
     }
 }
