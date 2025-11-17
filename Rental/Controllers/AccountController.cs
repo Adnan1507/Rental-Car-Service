@@ -12,17 +12,21 @@ namespace Rental.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWebHostEnvironment _env;
+        private readonly IEmailSender _emailSender;
+
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
-            IWebHostEnvironment env)
+            IWebHostEnvironment env,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _env = env;
+            _emailSender = emailSender;
         }
 
         // GET: /Account/Register
