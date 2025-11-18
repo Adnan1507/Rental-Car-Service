@@ -1,6 +1,6 @@
 ﻿@model Rental.ViewModels.RegisterViewModel
 @{
-    Layout = null;   /* REMOVE HEADER + FOOTER */
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -14,144 +14,258 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
-        body, html {
+
+        /* ---------------------------------------------------------
+                   GLOBAL SETTINGS (Removes page scroll)
+                --------------------------------------------------------- */
+        html, body {
             height: 100%;
             margin: 0;
-            overflow: hidden; /* No scroll bar */
+            overflow: hidden; /* Completely hide scrollbars */
         }
 
-        .full-screen-card {
+        /* ---------------------------------------------------------
+                   LEFT IMAGE SECTION
+                --------------------------------------------------------- */
+        .left-column {
+            height: auto !important;
+            padding: 0;
+        }
+
+        /* Fullscreen image on left side */
+        .left-image {
+            width: 100%;
             height: 100vh;
-            border-radius: 0 !important;
+            object-fit: cover; /* Ensures image fills without distortion */
+            object-position: center; /* Centers the image crop */
+            display: block;
         }
 
-        .left-img {
-            height: 100%;
-            object-fit: cover;
-            border-top-left-radius: 0 !important;
-            border-bottom-left-radius: 0 !important;
+        /* ---------------------------------------------------------
+                   RIGHT FORM SECTION
+                --------------------------------------------------------- */
+        .form-section {
+            height: 100vh; /* Same height as screen */
+            padding: 20px 40px 10px 40px; /* Reduced padding for compact layout */
+            overflow: hidden; /* Prevent scrolling */
+            background-color: ghostwhite;
         }
 
-        .form-container {
-            height: 100%;
-            overflow-y: auto;
-            padding: 50px;
+        /* ---------------------------------------------------------
+                   HEADER: "Sign Up" Styling
+                --------------------------------------------------------- */
+        .signup-title {
+            margin-top: 15px; /* Moves heading down slightly */
         }
+
+        /* ---------------------------------------------------------
+                   ACCOUNT TYPE LABEL (Red text)
+                --------------------------------------------------------- */
+        .account-label {
+            font-size: 25px;
+            font-weight: 600;
+            color: Red;
+            font-family: 'Montserrat';
+            position: relative;
+            top: -6px; /* Moves label slightly upward */
+        }
+
+        /* ---------------------------------------------------------
+                   RADIO BUTTON STYLING (Larger + Bold)
+                --------------------------------------------------------- */
+        .form-check-input[type="radio"] {
+            transform: scale(1.3); /* Increase size */
+            margin-top: 0.25rem;
+            margin-right: 10px;
+            border: 3px solid #000 !important;
+            background-color: #fff !important;
+            box-shadow: none !important;
+        }
+
+            .form-check-input[type="radio"]:checked {
+                border-color: #0d6efd !important; /* Bootstrap blue */
+                background-color: #0d6efd !important;
+            }
+
+        .form-check-input:focus {
+            box-shadow: none !important;
+        }
+
+        /* Radio button text alignment */
+        .form-check-label {
+            font-size: 25px;
+            font-weight: 700;
+            color: #000;
+            position: relative;
+            top: -6px;
+        }
+
+        /* ---------------------------------------------------------
+                   FILE INPUT LABELS (NID, License, Profile)
+                --------------------------------------------------------- */
+        .file-label {
+            font-size: 22px !important;
+            font-weight: 700 !important;
+            color: Black;
+            margin-bottom: 6px;
+        }
+
+        /* ---------------------------------------------------------
+                   LOGIN LINK UNDER SUBMIT BUTTON
+                --------------------------------------------------------- */
+        .login-link {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00AEEF;
+            text-decoration: none;
+        }
+
+            .login-link:hover {
+                color: #0097d1;
+            }
+
+        /* ---------------------------------------------------------
+                   FORM SPACING TWEAKS (Makes form fit screen)
+                --------------------------------------------------------- */
+        .form-control-lg {
+            padding-top: 14px !important;
+            padding-bottom: 14px !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 15px !important; /* More compact spacing */
+        }
+
     </style>
+
 </head>
 
 <body>
 
-    <section class="h-100 bg-dark">
-        <div class="container-fluid h-100">
-            <div class="row h-100">
+    <div class="container-fluid p-0">
+        <div class="row g-0">
 
-                <!-- LEFT IMAGE -->
-                <div class="col-xl-6 col-lg-6 col-md-6 d-none d-md-block p-0">
-                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
-                         class="img-fluid left-img" />
-                </div>
+            <!-- -----------------------------------------------------
+                 LEFT SIDE IMAGE
+            ------------------------------------------------------ -->
+            <div class="col-xl-6 col-lg-6 col-md-6 left-column">
+                <img src="~/images/Register.jpg" class="left-image" />
+            </div>
 
-                <!-- RIGHT FORM -->
-                <div class="col-xl-6 col-lg-6 col-md-6 bg-white form-container">
+            <!-- -----------------------------------------------------
+                 RIGHT SIDE: REGISTRATION FORM
+            ------------------------------------------------------ -->
+            <div class="col-xl-6 col-lg-6 col-md-6 form-section">
 
-                    <h3 class="mb-5 text-uppercase">Student Registration Form</h3>
+                <!-- SIGN UP TITLE -->
+                <h3 class="signup-title mb-4 text-uppercase"
+                    style="font-family: 'Poppins'; font-size: 80px; font-weight: 700; color: #00AEEF;">
+                    Sign Up
+                </h3>
 
-                    <form asp-action="Register" method="post" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <!-- FORM START -->
+                <form asp-action="Register" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+                    <!-- ACCOUNT TYPE -->
+                    <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
+                        <h6 class="account-label mb-0 me-4">Account Type:</h6>
 
-                        <!-- ACCOUNT TYPE -->
-                        <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
-                            <h6 class="mb-0 me-4">Account Type: </h6>
-
-                            <div class="form-check form-check-inline me-4">
-                                <input class="form-check-input" type="radio" asp-for="RoleType" value="Renter" id="roleRenter" />
-                                <label class="form-check-label" for="roleRenter">Renter</label>
-                            </div>
-
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" asp-for="RoleType" value="Host" id="roleHost" />
-                                <label class="form-check-label" for="roleHost">Car Host</label>
-                            </div>
-                        </div>
-                        <span asp-validation-for="RoleType" class="text-danger"></span>
-                        
-                        <!-- FULL NAME + PHONE -->
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <div class="form-outline">
-                                    <input asp-for="FullName" class="form-control form-control-lg" placeholder="FullName" />
-                                    <label class="form-label"></label>
-                                    <span asp-validation-for="FullName" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mb-4">
-                                <div class="form-outline">
-                                    <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="PhoneNumber" />
-                                    <label class="form-label"></label>
-                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                </div>
-                            </div>
+                        <div class="form-check form-check-inline mb-0 me-4">
+                            <input class="form-check-input" type="radio" asp-for="RoleType"
+                                   value="Renter" id="roleRenter" />
+                            <label class="form-check-label fw-bold" for="roleRenter">Renter</label>
                         </div>
 
-                        <!-- ADDRESS -->
-                        <div class="form-outline mb-4">
-                            <input asp-for="Address" class="form-control form-control-lg" placeholder="Address" />
-                            <label class="form-label"></label>
-                            <span asp-validation-for="Address" class="text-danger"></span>
+                        <div class="form-check form-check-inline mb-0 me-4">
+                            <input class="form-check-input" type="radio" asp-for="RoleType"
+                                   value="Host" id="roleHost" />
+                            <label class="form-check-label fw-bold" for="roleHost">Car Host</label>
+                        </div>
+                    </div>
+
+                    <span asp-validation-for="RoleType" class="text-danger"></span>
+
+                    <!-- NAME + PHONE -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <input asp-for="FullName" class="form-control form-control-lg" placeholder="FullName" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
                         </div>
 
-
-                        <!-- EMAIL -->
-                        <div class="form-outline mb-4">
-                            <input asp-for="Email" class="form-control form-control-lg" placeholder="Email" />
-                            <label class="form-label"></label>
-                            <span asp-validation-for="Email" class="text-danger"></span>
+                        <div class="col-md-6 mb-4">
+                            <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="PhoneNumber" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
+                    </div>
 
-                        <!-- PASSWORD -->
-                        <div class="form-outline mb-4">
-                            <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Password" />
-                            <label class="form-label"></label>
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
+                    <!-- ADDRESS -->
+                    <div class="mb-4">
+                        <input asp-for="Address" class="form-control form-control-lg" placeholder="Address" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
 
-                        <!-- CONFIRM PASSWORD -->
-                        <div class="form-outline mb-4">
-                            <input asp-for="ConfirmPassword" type="password" class="form-control form-control-lg" placeholder="ConfirmPassword" />
-                            <label class="form-label"></label>
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                        </div>
+                    <!-- EMAIL -->
+                    <div class="mb-4">
+                        <input asp-for="Email" class="form-control form-control-lg" placeholder="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
 
-                        <!-- FILE INPUTS -->
-                        <div class="form-outline mb-4">
-                            <label class="form-label">NID Picture</label>
-                            <input asp-for="NIDImage" type="file" class="form-control form-control-lg" placeholder="NIDImage" />
-                            <span asp-validation-for="NIDImage" class="text-danger"></span>
-                        </div>
+                    <!-- PASSWORD -->
+                    <div class="mb-4">
+                        <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
 
-                        <div class="form-outline mb-4">
-                            <label class="form-label">License Picture</label>
-                            <input asp-for="LicenseImage" type="file" class="form-control form-control-lg" placeholder="LicenseImage" />
-                            <span asp-validation-for="LicenseImage" class="text-danger"></span>
-                        </div>
+                    <!-- CONFIRM PASSWORD -->
+                    <div class="mb-4">
+                        <input asp-for="ConfirmPassword" type="password" class="form-control form-control-lg" placeholder="ConfirmPassword" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
 
-                        <div class="form-outline mb-4">
-                            <label class="form-label">Profile Picture</label>
-                            <input asp-for="ProfileImage" type="file" class="form-control form-control-lg" placeholder="ProfileImage" />
-                            <span asp-validation-for="ProfileImage" class="text-danger"></span>
-                        </div>
+                    <!-- NID FILE -->
+                    <div class="mb-4">
+                        <label class="form-label file-label">NID Picture</label>
+                        <input asp-for="NIDImage" type="file" class="form-control form-control-lg" />
+                        <span asp-validation-for="NIDImage" class="text-danger"></span>
+                    </div>
 
-                        <!-- SUBMIT -->
-                        <button type="submit" class="btn btn-warning btn-lg w-100 mt-3">Submit</button>
-                    </form>
+                    <!-- LICENSE FILE -->
+                    <div class="mb-4">
+                        <label class="form-label file-label">License Picture</label>
+                        <input asp-for="LicenseImage" type="file" class="form-control form-control-lg" />
+                        <span asp-validation-for="LicenseImage" class="text-danger"></span>
+                    </div>
 
-                </div>
+                    <!-- PROFILE FILE -->
+                    <div class="mb-4">
+                        <label class="form-label file-label">Profile Picture</label>
+                        <input asp-for="ProfileImage" type="file" class="form-control form-control-lg" />
+                        <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                    </div>
+
+                    <!-- SUBMIT BUTTON -->
+                    <button type="submit" class="btn btn-lg w-100 mt-3"
+                            style="background-color:#00AEEF; color:white; border:none;"
+                            onmouseover="this.style.backgroundColor='#0097d1'"
+                            onmouseout="this.style.backgroundColor='#00AEEF'">
+                        Submit
+                    </button>
+
+                    <!-- LOGIN LINK -->
+                    <div class="text-center mt-3">
+                        <span style="font-size:18px; font-weight:500; color:#333;">
+                            Already have an account?
+                        </span>
+                        <a href="/Account/Login" class="login-link">Log in</a>
+                    </div>
+
+                </form>
+                <!-- FORM END -->
+
             </div>
         </div>
-    </section>
+    </div>
 
 </body>
 </html>
