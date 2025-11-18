@@ -1,3 +1,5 @@
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rental.Models;
@@ -15,6 +17,40 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();
+
+//This makes your Remember Me cookie
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.IsEssential = true;
+    options.Cookie.HttpOnly = true;
+
+    // RememberMe = true => persistent cookie (14 days)
+    options.ExpireTimeSpan = TimeSpan.FromDays(14);
+    options.SlidingExpiration = true;
+
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+
+    // 🔥 THE MAGIC: Force logout when browser restarts (if RememberMe = false)
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnValidatePrincipal = async context =>
+        {
+            // Perform the built-in security stamp validation
+            await SecurityStampValidator.ValidatePrincipalAsync(context);
+
+            // If the principal (logged-in user) is invalid → force logout
+            if (context.Principal == null)
+            {
+                context.RejectPrincipal();
+                await context.HttpContext.SignOutAsync();
+            }
+        }
+    };
+
+});
+
+
 
 // Register our repository and UnitOfWork in the DI container
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
