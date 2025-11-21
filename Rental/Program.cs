@@ -54,6 +54,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 // Register our repository and UnitOfWork in the DI container
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
 
