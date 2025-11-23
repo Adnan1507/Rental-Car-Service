@@ -6,6 +6,8 @@ namespace Rental.UnitOfWork
     public interface IUnitofWork : IDisposable
     {
         ICompanyRepository Companies { get; }
+        ICarRepository Cars { get; }
+
         Task<int> CompleteAsync(); // Save changes to database
     }
 }

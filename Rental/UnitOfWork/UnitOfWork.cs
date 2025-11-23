@@ -7,13 +7,16 @@ namespace Rental.UnitOfWork
     {
         private readonly ApplicationDbContext _context;
 
+        public ICompanyRepository Companies { get; }
+        public ICarRepository Cars { get; }
+
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             Companies = new CompanyRepository(_context);
-        }
+            Cars = new CarRepository(_context);
 
-        public ICompanyRepository Companies { get; }
+        }
 
         public async Task<int> CompleteAsync()
         {

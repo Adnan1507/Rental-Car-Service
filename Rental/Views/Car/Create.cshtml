@@ -1,0 +1,94 @@
+﻿@model Rental.ViewModels.CarCreateViewModel
+
+@{
+    ViewData["Title"] = "Add Car";
+}
+
+<style>
+    body {
+        padding-bottom: 120px; /* prevents footer from covering button */
+    }
+</style>
+
+
+<h2>Add Car</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Brand" class="form-label"></label>
+        <input asp-for="Brand" class="form-control" />
+        <span asp-validation-for="Brand" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Model" class="form-label"></label>
+        <input asp-for="Model" class="form-control" />
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Year" class="form-label"></label>
+        <input asp-for="Year" class="form-control" />
+        <span asp-validation-for="Year" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Transmission" class="form-label"></label>
+        <select asp-for="Transmission" class="form-select">
+            <option value="">-- Select Transmission --</option>
+            <option>Automatic</option>
+            <option>Manual</option>
+        </select>
+        <span asp-validation-for="Transmission" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FuelType" class="form-label"></label>
+        <select asp-for="FuelType" class="form-select">
+            <option value="">-- Select Fuel Type --</option>
+            <option>Petrol</option>
+            <option>Diesel</option>
+            <option>Electric</option>
+            <option>Hybrid</option>
+        </select>
+        <span asp-validation-for="FuelType" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Seats" class="form-label"></label>
+        <input asp-for="Seats" class="form-control" />
+        <span asp-validation-for="Seats" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PricePerDay" class="form-label"></label>
+        <input asp-for="PricePerDay" class="form-control" />
+        <span asp-validation-for="PricePerDay" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Location" class="form-label"></label>
+        <input asp-for="Location" class="form-control" />
+        <span asp-validation-for="Location" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Image" class="form-label">Car Image</label>
+        <input asp-for="Image" type="file" class="form-control" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Car</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

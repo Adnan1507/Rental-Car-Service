@@ -11,5 +11,7 @@ namespace Rental.Models
         }
 
         public DbSet<Company> Company { get; set; }
+        public DbSet<Car> Cars { get; set; }
+
     }
 }
