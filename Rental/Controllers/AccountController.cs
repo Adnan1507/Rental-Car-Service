@@ -235,6 +235,7 @@ namespace Rental.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -266,8 +267,12 @@ namespace Rental.Controllers
                 "Reset Password",
                 $"Please reset your password by clicking here: <a href='{callbackUrl}'>Reset Password</a>");
 
-            // Go to confirmation page
-            return RedirectToAction("ForgotPasswordConfirmation");
+            // ✅ Instead of redirecting to another page,
+            // we stay on the same page and tell the view "email was sent"
+            ViewBag.ResetEmailSent = true;
+
+            // render ForgotPassword view again
+            return View();
         }
 
 
