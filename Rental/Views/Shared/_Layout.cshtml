@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -98,6 +97,27 @@
                 nav.classList.remove('scrolled'); /* remove style */
             }
         });
+    </script>
+
+    <!-- Ensure page content sits below the fixed navbar -->
+    <script>
+        (function () {
+            function adjustBodyPadding() {
+                var nav = document.getElementById('mainNavbar');
+                if (!nav) return;
+                // Add a small extra gap so content doesn't sit flush under the navbar
+                var gap = 12;
+                var height = nav.offsetHeight + gap;
+                document.body.style.paddingTop = height + 'px';
+            }
+
+            // Adjust on load and when window resizes (responsive)
+            window.addEventListener('load', adjustBodyPadding);
+            window.addEventListener('resize', adjustBodyPadding);
+
+            // Also run once after a short delay to handle fonts/images that change layout
+            setTimeout(adjustBodyPadding, 300);
+        })();
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

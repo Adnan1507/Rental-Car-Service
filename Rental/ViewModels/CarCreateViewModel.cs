@@ -9,10 +9,14 @@ namespace Rental.ViewModels
         public string Brand { get; set; }
 
         [Required]
+        public string CarType { get; set; }   // Luxury, Sedan, SUV
+
+        [Required]
         public string Model { get; set; }
 
+        [Required]
         [Range(1950, 2050)]
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         [Required]
         public string Transmission { get; set; }
@@ -20,11 +24,12 @@ namespace Rental.ViewModels
         [Required]
         public string FuelType { get; set; }
 
+        [Required]
         [Range(1, 20)]
-        public int Seats { get; set; }
+        public int? Seats { get; set; }
 
         [Required]
-        public decimal PricePerDay { get; set; }
+        public decimal? PricePerDay { get; set; }
 
         [Required]
         public string Location { get; set; }
