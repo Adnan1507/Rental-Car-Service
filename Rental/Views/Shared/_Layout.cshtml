@@ -1,153 +1,33 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Rental</title>
 
-
+    <!-- CSS libraries -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Rental.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Rental.styles.css" asp-append-version="true" />
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
           rel="stylesheet" />
 
-    <!-- Font Awesome (for car icon) -->
+    <!-- Font Awesome icons -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
           crossorigin="anonymous"
           referrerpolicy="no-referrer" />
 
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* ===== Custom Navbar (black → yellow blend) ===== */
-        .custom-navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            height: 60px;
-            padding: 10px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            /* DEFAULT = TRANSPARENT */
-            background: transparent;
-            color: #f9fafb;
-            transition: background 0.4s ease, box-shadow 0.3s ease, transform 0.3s ease;
-            z-index: 333333;
-        }
-
-            .custom-navbar.scrolled {
-                /* SHOW GRADIENT ONLY WHEN SCROLLED */
-                background: linear-gradient(90deg, #000000, #181818, #FFB800);
-                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
-                transform: translateY(-1px);
-            }
-
-            /* Logo / brand */
-            .custom-navbar .logo {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 22px;
-                font-weight: 800;
-            }
-
-                .custom-navbar .logo i {
-                    color: #FFB800;
-                }
-
-        .brand-text {
-            text-decoration: none;
-            display: flex;
-            align-items: baseline;
-            gap: 4px;
-        }
-
-        .brand-main {
-            color: #f9fafb;
-        }
-
-        .brand-highlight {
-            color: #FFB800;
-        }
-
-        /* Center nav links */
-        .custom-navbar .nav-links,
-        .custom-navbar .auth-links {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-            margin: 0;
-            padding: 0;
-            align-items: center;
-        }
-
-            .custom-navbar .nav-links li a {
-                text-decoration: none;
-                color: #f9fafb;
-                font-size: 16px;
-                transition: color 0.25s ease;
-            }
-
-                .custom-navbar .nav-links li a:hover {
-                    color: #FFB800;
-                }
-
-            /* Auth buttons (Login / Register) */
-            .custom-navbar .auth-links a,
-            .custom-navbar .auth-links button {
-                font-size: 14px;
-                padding: 6px 16px;
-                border-radius: 999px;
-                border: 1px solid rgba(255, 255, 255, 0.6);
-                background: transparent;
-                color: #f9fafb;
-                text-decoration: none;
-                transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-            }
-
-                .custom-navbar .auth-links a:hover,
-                .custom-navbar .auth-links button:hover {
-                    background-color: rgba(0, 0, 0, 0.2);
-                    border-color: #ffffff;
-                }
-
-                /* Primary (Register) button */
-                .custom-navbar .auth-links a.primary {
-                    background: #FFB800;
-                    border-color: #FFB800;
-                    color: #111827;
-                    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
-                    font-weight: 600;
-                }
-
-                    .custom-navbar .auth-links a.primary:hover {
-                        background: #f59e0b;
-                        border-color: #f59e0b;
-                        color: #111827;
-                    }
-
-        /* Make room for fixed navbar */
-        body {
-            padding-top: 0;
-            overflow-x: hidden;
-        }
-
-       
-    </style>
 </head>
 
 <body>
     <header>
-        <!-- Custom Navbar -->
+        <!-- Navigation bar -->
         <nav class="custom-navbar" id="mainNavbar">
-            <!-- Logo: Vroomly Rentals -->
+
+            <!-- Logo -->
             <div class="logo">
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-text">
                     <span class="brand-main">Vroomly</span>
@@ -155,45 +35,46 @@
                 </a>
             </div>
 
-            <!-- Center Links -->
+            <!-- Center menu links -->
             <ul class="nav-links">
-                <li>
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                </li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                <li><a href="/#about">About</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Services">Services</a></li>
+                <li><a asp-area="" asp-controller="Cars" asp-action="Index">Cars</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
             </ul>
 
-            <!-- Auth Links (Right) -->
+            <!-- Auth buttons -->
             <ul class="auth-links">
                 @if (User?.Identity?.IsAuthenticated == true)
                 {
                     <li>
                         <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                            <!-- Logout button -->
                             <button type="submit">Logout</button>
                         </form>
                     </li>
                 }
                 else
                 {
-                    <li>
-                        <a asp-controller="Account" asp-action="Login">Login</a>
-                    </li>
-                    <li>
-                        <a asp-controller="Account" asp-action="Register" class="primary">Register</a>
-                    </li>
+                    <!-- Login -->
+                    <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+
+                    <!-- Register -->
+                    <li><a asp-controller="Account" asp-action="Register" class="primary">Register</a></li>
                 }
             </ul>
         </nav>
     </header>
 
     <div class="container">
+        <!-- main content -->
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    <!-- Footer -->
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - Rental -
@@ -201,20 +82,20 @@
         </div>
     </footer>
 
+    <!-- JS libraries -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <!-- Navbar scroll behavior (just adds shadow now) -->
+    <!-- Navbar scroll shadow/gradient -->
     <script>
         window.addEventListener('scroll', function () {
             var nav = document.getElementById('mainNavbar');
             if (!nav) return;
-
             if (window.scrollY > 30) {
-                nav.classList.add('scrolled');
+                nav.classList.add('scrolled'); /* apply scrolled style */
             } else {
-                nav.classList.remove('scrolled');
+                nav.classList.remove('scrolled'); /* remove style */
             }
         });
     </script>

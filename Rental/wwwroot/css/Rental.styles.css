@@ -1,0 +1,339 @@
+﻿
+html {
+    scroll-behavior: smooth; /* smooth scrolling */
+}
+/* ===== Custom Navbar (black → yellow blend) ===== */
+
+.custom-navbar {
+    position: fixed; /* stays at top */
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 90px; /* Increased height */
+    padding: 25px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent; /* transparent until scroll */
+    color: #f9fafb;
+    transition: background 0.4s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    z-index: 333333; /* keep above all */
+}
+
+    .custom-navbar.scrolled { /* Navbar background when scrolling */
+        background: linear-gradient(90deg, #000000, #181818, #FFB800);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+        transform: translateY(-1px);
+    }
+    /* Logo / brand area */
+
+    .custom-navbar .logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 32px;
+        font-weight: 800;
+    }
+
+        .custom-navbar .logo i {
+            color: #FFB800; /* yellow icon */
+        }
+/* Brand text colors */
+
+.brand-text {
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.brand-main {
+    color: #f9fafb; /* white */
+}
+
+.brand-highlight {
+    color: #FFB800; /* yellow */
+}
+/* Nav links center area */
+
+.custom-navbar .nav-links, .custom-navbar .auth-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+    .custom-navbar .nav-links li a {
+        text-decoration: none;
+        color: #f9fafb;
+        font-size: 20px;
+        font-weight: 600;
+        transition: color 0.25s ease;
+    }
+
+        .custom-navbar .nav-links li a:hover {
+            color: #FFB800; /* yellow hover */
+        }
+    /* Auth buttons (Login / Register) */
+
+    .custom-navbar .auth-links a, .custom-navbar .auth-links button {
+        font-size: 18px;
+        padding: 10px 22px;
+        border-radius: 999px; /* pill buttons */
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: transparent;
+        color: #f9fafb;
+        text-decoration: none;
+        transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+        .custom-navbar .auth-links a:hover, .custom-navbar .auth-links button:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-color: #ffffff;
+        }
+        /* Highlighted Register button */
+
+        .custom-navbar .auth-links a.primary {
+            background: #FFB800;
+            border-color: #FFB800;
+            color: #111827;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+            font-weight: 600;
+        }
+
+            .custom-navbar .auth-links a.primary:hover {
+                background: #f59e0b;
+                border-color: #f59e0b;
+                color: #111827;
+            }
+/* Main content spacing */
+
+body {
+    padding-top: 0;
+    overflow-x: hidden;
+}
+/* Get started button */
+
+/* Base styling */
+.get-started-btn {
+    color: #facc15; /* yellow-400 */
+    border: 2px solid #facc15;
+    background: transparent;
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 10px 22px;
+    transition: all .25s ease;
+    margin-top: 40px;
+}
+
+    /* Hover */
+    .get-started-btn:hover {
+        color: #ffffff;
+        background: #eab308; /* yellow-500 */
+        border-color: #eab308;
+        box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.4); /* focus ring-like */
+    }
+
+    /* Focus (optional) */
+    .get-started-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.4);
+    }
+
+/* About section spacing */
+
+/* ==================== ABOUT SECTION ==================== */
+
+#about {
+    padding: 120px 0;
+}
+
+/* About text width */
+.about-text-block {
+    max-width: 650px;
+}
+
+/* About image styling (larger) */
+.about-image {
+    width: 100%;
+    height: 640px; /* increased from 560px */
+    object-fit: cover;
+    border-radius: 22px;
+}
+
+/* Image container (wider + more right) */
+.about-image-wrap {
+    max-width: 680px; /* was 600px → increased */
+    margin-left: 80px; /* was 50px → pushed more right */
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.08);
+}
+
+/* Responsive about image */
+@media (max-width: 991.98px) {
+    .about-image {
+        height: 380px; /* slightly bigger on tablet */
+    }
+
+    .about-image-wrap {
+        margin-left: 0; /* no right push on smaller screens */
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .about-image {
+        height: 270px; /* increased from 260px */
+    }
+}
+
+#about .row {
+    margin-top: 60px;
+}
+
+
+/* Services section spacing */
+
+.services-section {
+    margin-top: 100px;
+}
+/* Service card */
+
+.service-card {
+    border-radius: 25px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: transform 0.3s ease;
+}
+/* Image wrapper inside service card */
+
+.service-img {
+    height: 280px;
+    overflow: hidden;
+}
+
+    .service-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+/* Hover zoom */
+
+.service-card:hover img {
+    transform: scale(1.1);
+}
+/* Service card content */
+
+.service-content {
+    padding: 25px;
+    text-align: center;
+    position: relative;
+}
+/* Service number bubble */
+
+.service-number {
+    background: #ffb84d;
+    color: #000;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -45px auto 15px auto;
+    z-index: 2;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.service-content h5 {
+    font-weight: bold;
+    font-size: 22px;
+}
+/* --- Hero full-width background --- */
+
+.hero-bg {
+    position: relative;
+    background-image: url('/images/herocar.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    height: 420px; /* short banner */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    z-index: 0;
+    background-attachment: fixed; /* optional; fine for desktop */
+}
+    /* Hero overlay */
+
+    .hero-bg::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.22);
+        z-index: 0;
+    }
+    /* Hero text content */
+
+    .hero-bg > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Hero small text */
+
+    .hero-bg p {
+        letter-spacing: 6px;
+        color: #e6a96c;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    /* Hero main heading */
+
+    .hero-bg h1 {
+        font-size: 58px;
+        font-weight: 700;
+        margin: 0;
+        color: white;
+    }
+/* Footer override */
+
+footer.footer, footer {
+    background: #fff !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+/* Navbar stays above hero */
+
+.custom-navbar {
+    z-index: 1000 !important;
+}
+/* Mobile hero fallback */
+
+@media (max-width: 991.98px) {
+    .hero-bg {
+        background-attachment: scroll !important;
+        height: 360px !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .hero-bg {
+        height: 300px !important;
+    }
+}

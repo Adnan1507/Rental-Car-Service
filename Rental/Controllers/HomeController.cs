@@ -23,18 +23,21 @@ namespace Rental.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User?.Identity != null && User.Identity.IsAuthenticated)
             {
                 var user = await _userManager.GetUserAsync(User);
 
-                if (await _userManager.IsInRoleAsync(user, "Admin"))
-                    return RedirectToAction("AdminDashboard");
+                if (user != null)
+                {
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                        return RedirectToAction("AdminDashboard");
 
-                if (await _userManager.IsInRoleAsync(user, "Host"))
-                    return RedirectToAction("HostDashboard");
+                    if (await _userManager.IsInRoleAsync(user, "Host"))
+                        return RedirectToAction("HostDashboard");
 
-                if (await _userManager.IsInRoleAsync(user, "Renter"))
-                    return RedirectToAction("RenterDashboard");
+                    if (await _userManager.IsInRoleAsync(user, "Renter"))
+                        return RedirectToAction("RenterDashboard");
+                }
             }
 
             return View(); // normal homepage

@@ -1,8 +1,9 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<!-- FULLSCREEN HERO (breaks out of Bootstrap container) -->
+<!-- =================== FULLSCREEN HERO =================== -->
 <section style="
     height: 100vh;
     width: 100vw;
@@ -18,12 +19,13 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: url('/images/hero.gif') center center/cover no-repeat;
-        filter: brightness(45%);   /* darker gif */
+        background: url('/images/hero.gif') center no-repeat;
+        background-size: cover;
+        filter: brightness(45%);
         z-index: 1;">
     </div>
 
-    <!-- Content on top -->
+    <!-- Hero Text -->
     <div style="
         position: absolute;
         top: 50%;
@@ -33,24 +35,165 @@
         color: white;
         z-index: 2;">
 
+        <!-- Title -->
         <h1 class="display-3 fw-bold mb-3"
             style="text-shadow: 1px 3px 15px rgba(0,0,0,0.7);">
             Drive Your Next <span style="color:#FFB800;">Adventure</span>
         </h1>
 
-        <p class="lead mb-4 "
+        <!-- Subtitle -->
+        <p class="lead mb-4"
            style="text-shadow: 1px 2px 12px rgba(0,0,0,0.6);">
             Book premium cars at affordable prices. Fast, reliable &amp; secure.
         </p>
 
+        <!-- CTA -->
         <a asp-controller="Account" asp-action="Register"
-           class="btn btn-primary btn-lg px-4 me-2">
-            Get Started
+           class="get-started-btn d-inline-block">
+            GET STARTED
         </a>
 
-        <a href="#features"
-           class="btn btn-outline-light btn-lg px-4">
-            Learn More
-        </a>
     </div>
 </section>
+
+
+<!-- ====================== ABOUT =========================== -->
+<section id="about" class="py-5">
+    <div class="container">
+        <div class="row align-items-center gy-4">
+
+            <!-- About Text -->
+            <div class="col-lg-6">
+
+                <small class="text-muted" style="letter-spacing:6px;">
+                    VROOMLY
+                </small>
+
+                <h2 class="fw-bold display-6 mt-2 mb-3 about-title">
+                    We Are More Than <br />
+                    <span class="about-highlight">A Car Rental Company</span>
+                </h2>
+
+                <p class="text-muted about-desc mb-4">
+                    We are committed to making every journey smooth, comfortable, and stress-free.
+                    With a diverse fleet of well-maintained vehicles and a team dedicated to exceptional service,
+                    we ensure that you always have the right car at the right time.
+                </p>
+
+                <!-- Feature List -->
+                <ul class="list-unstyled about-features mb-0">
+
+                    <!-- Feature 1 -->
+                    <li class="d-flex align-items-center mb-3">
+                        <span class="feature-dot me-3">
+                            <svg width="12" height="12" viewBox="0 0 24 24">
+                                <path d="M20 6L9 17l-5-5"
+                                      stroke="#222" stroke-width="2"
+                                      stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </span>
+                        <span class="feature-text">Sports and Luxury Cars</span>
+                    </li>
+
+                    <!-- Feature 2 -->
+                    <li class="d-flex align-items-center">
+                        <span class="feature-dot me-3">
+                            <svg width="12" height="12" viewBox="0 0 24 24">
+                                <path d="M20 6L9 17l-5-5"
+                                      stroke="#222" stroke-width="2"
+                                      stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </span>
+                        <span class="feature-text">Economy & Family Cars</span>
+                    </li>
+
+                </ul>
+            </div>
+
+            <!-- About Image -->
+            <div class="col-lg-6 d-flex justify-content-end">
+                <div class="about-image-wrap">
+                    <img src="~/images/about.jpg"
+                         alt="About - Vroomly Rentals"
+                         class="about-image" />
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ====================== SERVICES ======================== -->
+<section class="services-section py-5">
+
+    <!-- Section Header -->
+    <div class="text-center mb-5">
+        <h6 class="text-uppercase"
+            style="letter-spacing: 4px; font-size: 10px; color: #f5a623;">
+            WHAT WE DO
+        </h6>
+
+        <h2 class="fw-bold">
+            Our <span style="color: #f5a623;">Services</span>
+        </h2>
+    </div>
+
+    <!-- Cards -->
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+
+            <!-- Card 1 -->
+            <div class="col-md-4">
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="~/images/host.jpg" alt="host">
+                    </div>
+                    <div class="service-content">
+                        <div class="service-number">01</div>
+                        <h5>Host Your Car</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-md-4">
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="~/images/rent.jpg" alt="rent">
+                    </div>
+                    <div class="service-content">
+                        <div class="service-number">02</div>
+                        <h5>Rent A Car</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-md-4">
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="~/images/maintenance.jpg" alt="maintenance">
+                    </div>
+                    <div class="service-content">
+                        <div class="service-number">03</div>
+                        <h5>Car Maintenance & Inspection</h5>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ====================== MINI HERO ======================= -->
+<div class="hero-bg">
+    <div class="hero-content">
+        <p>RENT NOW</p>
+        <h1>Join Our Family</h1>
+    </div>
+</div>
+
+
