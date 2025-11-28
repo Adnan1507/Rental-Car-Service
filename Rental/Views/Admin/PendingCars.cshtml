@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Rental.ViewModels.AdminPendingCarViewModel>
+
+@{
+    ViewData["Title"] = "Pending Cars";
+}
+
+<h2>Pending Cars</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">No pending cars at the moment.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Image</th>
+                <th>Brand / Model</th>
+                <th>Type</th>
+                <th>Host</th>
+                <th>Price/day</th>
+                <th>Submitted</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Car.Id</td>
+                    <td style="width:120px;">
+                        @if (!string.IsNullOrEmpty(item.Car.ImagePath))
+                        {
+                            <img src="@item.Car.ImagePath" alt="" style="width:100px;height:60px;object-fit:cover;" />
+                        }
+                    </td>
+                    <td>@item.Car.Brand<br /><small class="text-muted">@item.Car.Model</small></td>
+                    <td>@item.Car.CarType</td>
+                    <td>@item.HostName</td>
+                    <td>@item.Car.PricePerDay.ToString("C")</td>
+                    <td>@item.Car.CreatedAt.ToString("g")</td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <form asp-controller="Admin" asp-action="Approve" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.Car.Id" />
+                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                            </form>
+
+                            <form asp-controller="Admin" asp-action="Reject" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.Car.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
