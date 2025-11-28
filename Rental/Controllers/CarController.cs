@@ -33,8 +33,22 @@ namespace Rental.Controllers
         // POST: /Car/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CarCreateViewModel model)
+        public async Task<IActionResult> Create([Bind(Prefix = "")] CarCreateViewModel model)
         {
+            // server-side required checks for nullable numeric properties
+            if (model.Year == null)
+            {
+                ModelState.AddModelError(nameof(model.Year), "Year is required.");
+            }
+            if (model.Seats == null)
+            {
+                ModelState.AddModelError(nameof(model.Seats), "Seats is required.");
+            }
+            if (model.PricePerDay == null)
+            {
+                ModelState.AddModelError(nameof(model.PricePerDay), "Price per day is required.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -72,14 +86,15 @@ namespace Rental.Controllers
             var car = new Car
             {
                 HostId = user.Id,
-                Brand = model.Brand,
-                Model = model.Model,
-                Year = model.Year,
-                Transmission = model.Transmission,
-                FuelType = model.FuelType,
-                Seats = model.Seats,
-                PricePerDay = model.PricePerDay,
-                Location = model.Location,
+                Brand = model.Brand!,
+                CarType = model.CarType!,
+                Model = model.Model!,
+                Year = model.Year!.Value,
+                Transmission = model.Transmission!,
+                FuelType = model.FuelType!,
+                Seats = model.Seats!.Value,
+                PricePerDay = model.PricePerDay!.Value,
+                Location = model.Location!,
                 Description = model.Description,
                 ImagePath = imagePath,
                 Status = CarStatus.Pending
