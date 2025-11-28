@@ -12,8 +12,8 @@ using Rental.Models;
 namespace Rental.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251120184833_AddCarTable")]
-    partial class AddCarTable
+    [Migration("20251128145326_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -255,6 +255,11 @@ namespace Rental.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CarType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
