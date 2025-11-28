@@ -1,16 +1,8 @@
-﻿
-html {
+﻿html {
     scroll-behavior: smooth; /* smooth scrolling */
 }
-.landing-background {
-    background-color: yellow !important;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-}
-
-
 /* ===== Custom Navbar (black → yellow blend) ===== */
+
 .custom-navbar {
     position: fixed; /* stays at top */
     top: 0;
@@ -300,7 +292,6 @@ body {
     .hero-bg > * {
         position: relative;
         z-index: 1;
-
     }
 
     /* Hero small text */
@@ -319,30 +310,25 @@ body {
         margin: 0;
         color: white;
     }
-/* Footer override */
 
-footer.footer, footer {
-    background: #fff !important;
-    position: relative !important;
-    z-index: 10 !important;
+/* FULL FOOTER BACKGROUND COLOR */
+.site-footer {
+    background-color: #222; /* <— change this to any color you want */
+    color: #f1f1f1;
 }
-/* Navbar stays above hero */
 
-.custom-navbar {
-    z-index: 1000 !important;
-}
-/* Mobile hero fallback */
-
-@media (max-width: 991.98px) {
-    .hero-bg {
-        background-attachment: scroll !important;
-        height: 360px !important;
+    /* ensure links inside footer remain readable */
+    .site-footer a {
+        color: #e5e5e5;
     }
-}
 
-@media (max-width: 575.98px) {
-    .hero-bg {
-        height: 300px !important;
+        .site-footer a:hover {
+            color: #ffbf00;
+        }
+
+    /* optional: remove Bootstrap's default light background for sections */
+    .site-footer .social-strip,
+    .site-footer .footer-top,
+    .site-footer .copyright {
+        background-color: transparent !important;
     }
-}
-

@@ -8,19 +8,17 @@
     <!-- CSS libraries -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Rental.styles.css" asp-append-version="true" />
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
-          rel="stylesheet" />
-
-    <!-- Font Awesome icons -->
+    <!-- MDB and Font Awesome (third-party) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
           crossorigin="anonymous"
           referrerpolicy="no-referrer" />
 
+    <!-- Custom styles LAST so they win -->
+    <link rel="stylesheet" href="~/css/Rental.styles.css" asp-append-version="true" />
 </head>
-
 <body>
     <header>
         <!-- Navigation bar -->
@@ -73,19 +71,72 @@
         </main>
     </div>
 
-    <!-- Footer -->
-    <footer class="border-top footer text-muted">
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="d-flex justify-content-between align-items-center py-3 small">
-                    <div>&copy; @DateTime.Now.Year - VroomlyRentals. All rights reserved.</div>
-                    <div class="footer-bottom-links">
-                        <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="site-footer">
+        <section class="social-strip d-flex justify-content-center justify-content-lg-between p-4 border-bottom ">
+            <div class="me-5 d-none d-lg-block">
+                <span>Get connected with us on social networks:</span>
+            </div>
+            <div>
+                <a href="#" class="me-4 text-reset"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="me-4 text-reset"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="me-4 text-reset"><i class="fab fa-google"></i></a>
+                <a href="#" class="me-4 text-reset"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="me-4 text-reset"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="me-4 text-reset"><i class="fab fa-github"></i></a>
+            </div>
+        </section>
+
+        <section class="footer-top">
+            <div class="container text-center text-md-start mt-5">
+                <div class="row mt-3">
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4"><i class="fas fa-gem me-3"></i>VROOMLY RENTALS</h6>
+                        <p>
+                            Have questions? We’d love to hear from you.
+
+                            Join our community—let’s build something great.
+
+                            Follow us for updates, news & more.
+
+                            Let’s stay connected!
+                        </p>
+                    </div>
+
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">Categories</h6>
+                        <p><a href="#!" class="text-reset">Luxury</a></p>
+                        <p><a href="#!" class="text-reset">SUV</a></p>
+                        <p><a href="#!" class="text-reset">Sedan</a></p>
+                    </div>
+
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">Useful links</h6>
+                        <p><a href="#!" class="text-reset">About Us</a></p>
+                        <p><a href="#!" class="text-reset">Orders</a></p>
+                        <p><a href="#!" class="text-reset">Help</a></p>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p><i class="fas fa-home me-3"></i> Chittagong, CTG 10012, BD</p>
+                        <p><i class="fas fa-envelope me-3"></i> info@example.com</p>
+                        <p><i class="fas fa-phone me-3"></i> + 01 609 123 456</p>
+                        <p><i class="fas fa-print me-3"></i> + 01 809 123 456</p>
                     </div>
                 </div>
             </div>
+        </section>
+
+        <div class="footer-bottom">
+            <div class="container text-center">
+                <span>&copy; 2025 Vroomly Rentals •</span>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="footer-privacy">Privacy Policy</a>
+            </div>
         </div>
+
+
     </footer>
+
 
     <!-- JS libraries -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -103,27 +154,6 @@
                 nav.classList.remove('scrolled'); /* remove style */
             }
         });
-    </script>
-
-    <!-- Ensure page content sits below the fixed navbar -->
-    <script>
-        (function () {
-            function adjustBodyPadding() {
-                var nav = document.getElementById('mainNavbar');
-                if (!nav) return;
-                // Add a small extra gap so content doesn't sit flush under the navbar
-                var gap = 12;
-                var height = nav.offsetHeight + gap;
-                document.body.style.paddingTop = height + 'px';
-            }
-
-            // Adjust on load and when window resizes (responsive)
-            window.addEventListener('load', adjustBodyPadding);
-            window.addEventListener('resize', adjustBodyPadding);
-
-            // Also run once after a short delay to handle fonts/images that change layout
-            setTimeout(adjustBodyPadding, 300);
-        })();
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
