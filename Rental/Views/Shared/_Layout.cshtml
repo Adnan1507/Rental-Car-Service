@@ -76,9 +76,15 @@
 
     <!-- Footer -->
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Rental -
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center py-3 small">
+                    <div>&copy; @DateTime.Now.Year - VroomlyRentals. All rights reserved.</div>
+                    <div class="footer-bottom-links">
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 

@@ -2,8 +2,15 @@
 html {
     scroll-behavior: smooth; /* smooth scrolling */
 }
-/* ===== Custom Navbar (black → yellow blend) ===== */
+.landing-background {
+    background-color: yellow !important;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
 
+
+/* ===== Custom Navbar (black → yellow blend) ===== */
 .custom-navbar {
     position: fixed; /* stays at top */
     top: 0;
@@ -293,6 +300,7 @@ body {
     .hero-bg > * {
         position: relative;
         z-index: 1;
+
     }
 
     /* Hero small text */
@@ -337,3 +345,4 @@ footer.footer, footer {
         height: 300px !important;
     }
 }
+
