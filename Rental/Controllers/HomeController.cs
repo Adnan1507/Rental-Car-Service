@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Rental.Models;
+using Rental.UnitOfWork;
 using System.Diagnostics;
 
 namespace Rental.Controllers
@@ -10,13 +11,16 @@ namespace Rental.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitofWork _unitOfWork;
 
         public HomeController(
             ILogger<HomeController> logger,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IUnitofWork unitOfWork)
         {
             _logger = logger;
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
         // PUBLIC PAGE — Anyone can access
@@ -39,8 +43,19 @@ namespace Rental.Controllers
                         return RedirectToAction("RenterDashboard");
                 }
             }
+            // inside Index after loading cars
+            var cars = await _unitOfWork.Cars.GetApprovedCarsAsync();
 
-            return View(); // normal homepage
+            // add this debug info
+            ViewBag.ApprovedCount = cars?.Count() ?? 0;
+            ViewBag.DebugSample = cars?.Take(3).Select(c => $"{c.Brand} {c.Model} ({c.CarType})").ToList();
+
+            return View(cars);
+
+
+            // Load approved cars and pass to the view
+            //var cars = await _unitOfWork.Cars.GetApprovedCarsAsync();
+            //return View(); // normal homepage
         }
 
 
