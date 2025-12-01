@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Rental.Models;
 using Rental.UnitOfWork;
+using Rental.ViewModels;
 using System.Diagnostics;
 
 namespace Rental.Controllers
@@ -45,17 +46,8 @@ namespace Rental.Controllers
             }
             // inside Index after loading cars
             var cars = await _unitOfWork.Cars.GetApprovedCarsAsync();
-
-            // add this debug info
-            ViewBag.ApprovedCount = cars?.Count() ?? 0;
-            ViewBag.DebugSample = cars?.Take(3).Select(c => $"{c.Brand} {c.Model} ({c.CarType})").ToList();
-
             return View(cars);
 
-
-            // Load approved cars and pass to the view
-            //var cars = await _unitOfWork.Cars.GetApprovedCarsAsync();
-            //return View(); // normal homepage
         }
 
 
@@ -77,11 +69,18 @@ namespace Rental.Controllers
             return View();
         }
 
-        // Only Host can access
+        // Host dashboard — show cars that belong to the logged-in host
         [Authorize(Roles = "Host")]
-        public IActionResult HostDashboard()
+        public async Task<IActionResult> HostDashboard()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var hostCars = await _unitOfWork.Cars.GetCarsByHostAsync(user.Id);
+            return View(hostCars);
         }
 
         // Only Renter can access

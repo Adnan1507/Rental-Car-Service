@@ -1,0 +1,45 @@
+@model Rental.Models.Car
+
+@{
+    ViewData["Title"] = "Car Details";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <img src="@Model.ImagePath" class="img-fluid rounded" alt="@($"{Model.Brand} {Model.Model}")" />
+        }
+        else
+        {
+            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height:300px;">
+                <i class="fa fa-car fa-3x"></i>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-6">
+        <h2>@Model.Brand @Model.Model</h2>
+        <p><strong>Type:</strong> @Model.CarType</p>
+        <p><strong>Year:</strong> @Model.Year</p>
+        <p><strong>Transmission:</strong> @Model.Transmission</p>
+        <p><strong>Fuel:</strong> @Model.FuelType</p>
+        <p><strong>Seats:</strong> @Model.Seats</p>
+        <p><strong>Location:</strong> @Model.Location</p>
+        <p><strong>Price per day:</strong> @Model.PricePerDay.ToString("C")</p>
+
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <h5>Description</h5>
+            <p>@Model.Description</p>
+        }
+
+        <div class="mt-3">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Back to list</a>
+            @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Host"))
+            {
+                <a asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary ms-2">Edit</a>
+            }
+        </div>
+    </div>
+</div>

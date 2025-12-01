@@ -1,6 +1,84 @@
-﻿@{
+﻿@model IEnumerable<Rental.Models.Car>
+
+@{
     ViewData["Title"] = "Host Dashboard";
 }
 
-<h1>Host Dashboard</h1>
-<p>Welcome, Car Host!</p>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>My Cars</h1>
+    <a asp-controller="Car" asp-action="Create" class="btn btn-primary">Add New Car</a>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">You have not added any cars yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Image</th>
+                    <th>Brand / Model</th>
+                    <th>Type</th>
+                    <th>Year</th>
+                    <th>Seats</th>
+                    <th>Price/day</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var car in Model)
+                {
+                    <tr>
+                        <td>@car.Id</td>
+                        <td style="width:120px;">
+                            @if (!string.IsNullOrEmpty(car.ImagePath))
+                            {
+                                <img src="@car.ImagePath" alt="" style="width:110px;height:65px;object-fit:cover;border-radius:4px;" />
+                            }
+                            else
+                            {
+                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width:110px;height:65px;">
+                                    <i class="fa fa-car"></i>
+                                </div>
+                            }
+                        </td>
+                        <td>@car.Brand<br /><small class="text-muted">@car.Model</small></td>
+                        <td>@car.CarType</td>
+                        <td>@car.Year</td>
+                        <td>@car.Seats</td>
+                        <td>@car.PricePerDay.ToString("C")</td>
+                        <td>
+                            @switch (car.Status)
+                            {
+                                case Rental.Models.CarStatus.Pending:
+                                    <span class="badge bg-warning text-dark">Pending</span>;
+                                    break;
+                                case Rental.Models.CarStatus.Approved:
+                                    <span class="badge bg-success">Approved</span>;
+                                    break;
+                                case Rental.Models.CarStatus.Rejected:
+                                    <span class="badge bg-danger">Rejected</span>;
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                                <a asp-controller="Car" asp-action="Edit" asp-route-id="@car.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <form asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this car?');">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -19,7 +19,7 @@ namespace Rental.Controllers
             _userManager = userManager;
         }
 
-        // GET: /Admin/PendingCars
+        // GET: /Admin/PendingCars on
         public async Task<IActionResult> PendingCars()
         {
             var all = await _unitOfWork.Cars.GetAllAsync();
