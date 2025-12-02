@@ -127,7 +127,7 @@ namespace Rental.Controllers
 
         // Shows the login page to the user
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl = null)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -141,6 +141,7 @@ namespace Rental.Controllers
                     return RedirectToAction("RenterDashboard", "Home");
             }
 
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
@@ -148,7 +149,7 @@ namespace Rental.Controllers
         // Handles login form submission
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
                 return View(model);

@@ -1,0 +1,58 @@
+@model IEnumerable<Rental.Models.Booking>
+
+@{
+    ViewData["Title"] = "Booking Requests";
+}
+
+<h2>Booking Requests</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">No booking requests at the moment.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Car</th>
+                    <th>Renter</th>
+                    <th>Period</th>
+                    <th>Total</th>
+                    <th>Requested At</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var b in Model)
+                {
+                    <tr>
+                        <td>@b.Id</td>
+                        <td>@b.Car.Brand @b.Car.Model<br /><small class="text-muted">@b.Car.Location</small></td>
+                        <td>@b.Renter.FullName<br /><small>@b.Renter.Email</small></td>
+                        <td>@b.StartDate.ToShortDateString() - @b.EndDate.ToShortDateString()</td>
+                        <td>@b.TotalPrice.ToString("C")</td>
+                        <td>@b.CreatedAt.ToString("g")</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <form asp-controller="Car" asp-action="ApproveBooking" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@b.Id" />
+                                    <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                </form>
+
+                                <form asp-controller="Car" asp-action="RejectBooking" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@b.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

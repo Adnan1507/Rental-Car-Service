@@ -83,11 +83,26 @@ namespace Rental.Controllers
             return View(hostCars);
         }
 
-        // Only Renter can access
+        // Only Renter can access — show renter's bookings and available cars
         [Authorize(Roles = "Renter")]
-        public IActionResult RenterDashboard()
+        public async Task<IActionResult> RenterDashboard()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var bookings = await _unitOfWork.Bookings.GetBookingsByRenterAsync(user.Id);
+            var availableCars = await _unitOfWork.Cars.GetApprovedCarsAsync();
+
+            var vm = new Rental.ViewModels.RenterDashboardViewModel
+            {
+                Bookings = bookings,
+                AvailableCars = availableCars
+            };
+
+            return View(vm);
         }
 
         // ERROR HANDLING

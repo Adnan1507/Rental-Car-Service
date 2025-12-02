@@ -31,6 +31,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Account/Login";
     options.LogoutPath = "/Account/Logout";
 
+
     // 🔥 THE MAGIC: Force logout when browser restarts (if RememberMe = false)
     options.Events = new CookieAuthenticationEvents
     {
@@ -50,11 +51,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 });
 
-
-
 // Register our repository and UnitOfWork in the DI container
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
 
@@ -66,11 +66,17 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
-// SEED ADMIN USER
+// apply pending migrations, then seed
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var services = scope.ServiceProvider;
+
+    // apply migrations
+    var db = services.GetRequiredService<Rental.Models.ApplicationDbContext>();
+    db.Database.Migrate();
+
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<Rental.Models.ApplicationUser>>();
     await Rental.Data.DbInitializer.SeedAdminUser(roleManager, userManager);
 }
 

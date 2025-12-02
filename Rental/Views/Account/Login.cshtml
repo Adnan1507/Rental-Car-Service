@@ -74,6 +74,8 @@
 
                 <form asp-action="Login" method="post" style="max-width:28rem; margin-top:50px;">
 
+                    <input type="hidden" name="returnUrl" value="@(ViewData["ReturnUrl"] ?? "")" />
+
                     <h1 style="font-size:36px; font-weight:800; color:#00AEEF; margin-bottom:25px;">Log in</h1>
 
                     <div class="mb-3">

@@ -1,6 +1,93 @@
-﻿@{
-    ViewData["Title"] = "Renter Dashboard";
+﻿@model Rental.ViewModels.RenterDashboardViewModel
+
+@{
+    ViewData["Title"] = "My Dashboard";
 }
 
-<h1>Renter Dashboard</h1>
-<p>Welcome, Renter!</p>
+<h2>Available Cars</h2>
+
+@if (Model.AvailableCars == null || !Model.AvailableCars.Any())
+{
+    <div class="alert alert-info">No cars are available for rent right now.</div>
+}
+else
+{
+    <div class="row g-4 mb-4">
+        @foreach (var car in Model.AvailableCars)
+        {
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(car.ImagePath))
+                    {
+                        <img src="@car.ImagePath" class="card-img-top" style="height:160px;object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height:160px;">
+                            <i class="fa fa-car fa-2x"></i>
+                        </div>
+                    }
+
+                    <div class="card-body">
+                        <h5 class="card-title">@car.Brand @car.Model</h5>
+                        <p class="card-text mb-1"><strong>Price/day:</strong> @car.PricePerDay.ToString("C")</p>
+
+                        <div class="d-flex">
+                            <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-primary">Details</a>
+
+                            @* Rent button visible only to Renters (this page requires Renter role) and only for approved cars *@
+                            @if (car.Status == Rental.Models.CarStatus.Approved)
+                            {
+                                <a asp-controller="Car" asp-action="Rent" asp-route-id="@car.Id" class="btn btn-sm btn-success ms-2">Rent</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<h2>My Bookings</h2>
+
+@if (Model.Bookings == null || !Model.Bookings.Any())
+{
+    <div class="alert alert-info">You have not made any bookings yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Car</th>
+                    <th>Period</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Requested At</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var b in Model.Bookings)
+                {
+                    <tr>
+                        <td>@b.Id</td>
+                        <td>
+                            @if (b.Car != null)
+                            {
+                                @b.Car.Brand @b.Car.Model
+                                <br />
+                                <small class="text-muted">@b.Car.Location</small>
+                            }
+                        </td>
+                        <td>@b.StartDate.ToShortDateString() - @b.EndDate.ToShortDateString()</td>
+                        <td>@b.TotalPrice.ToString("C")</td>
+                        <td>@b.Status</td>
+                        <td>@b.CreatedAt.ToString("g")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

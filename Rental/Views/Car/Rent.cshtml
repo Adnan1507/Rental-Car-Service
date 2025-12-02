@@ -1,0 +1,56 @@
+@model Rental.ViewModels.BookingCreateViewModel
+
+@{
+    ViewData["Title"] = "Rent Car";
+}
+
+<h2>Rent @Model.CarTitle</h2>
+
+<form asp-action="Rent" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="CarId" />
+
+    <div class="mb-3">
+        <label asp-for="StartDate" class="form-label"></label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EndDate" class="form-label"></label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <p><strong>Price per day:</strong> @Model.PricePerDay.ToString("C")</p>
+        <p><strong>Estimated total:</strong> <span id="estimated">@Model.TotalPrice.ToString("C")</span></p>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Request Booking</button>
+    <a asp-action="Details" asp-route-id="@Model.CarId" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Quick client-side estimated price update
+        const startInput = document.querySelector('input[name="StartDate"]');
+        const endInput = document.querySelector('input[name="EndDate"]');
+        const estimated = document.getElementById('estimated');
+        const pricePerDay = parseFloat('@Model.PricePerDay');
+
+        function updateEstimate() {
+            const s = new Date(startInput.value);
+            const e = new Date(endInput.value);
+            if (isNaN(s) || isNaN(e)) return;
+            let days = Math.ceil((e - s) / (1000 * 60 * 60 * 24));
+            if (days < 1) days = 1;
+            estimated.textContent = (days * pricePerDay).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+        }
+
+        startInput?.addEventListener('change', updateEstimate);
+        endInput?.addEventListener('change', updateEstimate);
+        updateEstimate();
+    </script>
+}

@@ -8,6 +8,9 @@ namespace Rental.UnitOfWork
         ICompanyRepository Companies { get; }
         ICarRepository Cars { get; }
 
+        // bookings
+        IBookingRepository Bookings { get; }
+
         Task<int> CompleteAsync(); // Save changes to database
     }
 }

@@ -36,9 +36,16 @@
 
         <div class="mt-3">
             <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Back to list</a>
+
             @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Host"))
             {
                 <a asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary ms-2">Edit</a>
+            }
+
+            @* Rent button for Renters (only if car is approved) *@
+            @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Renter") && Model.Status == Rental.Models.CarStatus.Approved)
+            {
+                <a asp-controller="Car" asp-action="Rent" asp-route-id="@Model.Id" class="btn btn-success ms-2">Rent this car</a>
             }
         </div>
     </div>

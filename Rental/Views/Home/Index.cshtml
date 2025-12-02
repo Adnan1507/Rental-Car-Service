@@ -94,7 +94,16 @@
                             <p class="card-text mb-1"><strong>Type:</strong> @car.CarType</p>
                             <p class="card-text mb-1"><strong>Fuel:</strong> @car.FuelType</p>
                             <p class="card-text mb-2"><strong>Price/day:</strong> @car.PricePerDay.ToString("C")</p>
-                            <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-primary">View Details</a>
+
+                            <div class="d-flex">
+                                <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-primary">View Details</a>
+
+                                @* Rent button visible only to authenticated Renters and only for approved cars *@
+                                @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Renter") && car.Status == Rental.Models.CarStatus.Approved)
+                                {
+                                    <a asp-controller="Car" asp-action="Rent" asp-route-id="@car.Id" class="btn btn-sm btn-success ms-2">Rent</a>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>

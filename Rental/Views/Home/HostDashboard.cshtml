@@ -6,7 +6,15 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>My Cars</h1>
-    <a asp-controller="Car" asp-action="Create" class="btn btn-primary">Add New Car</a>
+    @* Show Add button only for authenticated Hosts; otherwise provide a registration link *@
+    @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Host"))
+    {
+        <a asp-area="" asp-controller="Car" asp-action="Create" class="btn btn-primary">Add New Car</a>
+    }
+    else
+    {
+        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary">Register as Host</a>
+    }
 </div>
 
 @if (Model == null || !Model.Any())

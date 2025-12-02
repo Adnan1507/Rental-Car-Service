@@ -7,7 +7,6 @@ using Rental.ViewModels;
 
 namespace Rental.Controllers
 {
-    [Authorize(Roles = "Host")]
     public class CarController : Controller
     {
         private readonly IUnitofWork _unitOfWork;
@@ -25,6 +24,7 @@ namespace Rental.Controllers
 
         // GET: /Car/Create
         [HttpGet]
+        [Authorize(Roles = "Host")]
         public IActionResult Create()
         {
             return View();
@@ -33,6 +33,7 @@ namespace Rental.Controllers
         // POST: /Car/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Host")]
         public async Task<IActionResult> Create([Bind(Prefix = "")] CarCreateViewModel model)
         {
             // server-side required checks for nullable numeric properties
@@ -119,6 +120,7 @@ namespace Rental.Controllers
 
         // GET: /Car/Edit/5
         [HttpGet]
+        [Authorize(Roles = "Host")]
         public async Task<IActionResult> Edit(int id)
         {
             var car = await _unitOfWork.Cars.GetByIdAsync(id);
@@ -148,6 +150,7 @@ namespace Rental.Controllers
         // POST: /Car/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Host")]
         public async Task<IActionResult> Edit(int id, CarEditViewModel model)
         {
             if (id != model.Id) return BadRequest();
@@ -170,23 +173,23 @@ namespace Rental.Controllers
                 return View(model);
             }
 
-            var car = await _unitOfWork.Cars.GetByIdAsync(id);
-            if (car == null) return NotFound();
+            var carToUpdate = await _unitOfWork.Cars.GetByIdAsync(id);
+            if (carToUpdate == null) return NotFound();
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return RedirectToAction("Login", "Account");
+            var userForEdit = await _userManager.GetUserAsync(User);
+            if (userForEdit == null) return RedirectToAction("Login", "Account");
 
-            if (car.HostId != user.Id)
+            if (carToUpdate.HostId != userForEdit.Id)
             {
                 return Forbid();
             }
 
             // Update only allowed fields
-            car.PricePerDay = model.PricePerDay!.Value;
-            car.Location = model.Location!;
-            car.Description = model.Description;
+            carToUpdate.PricePerDay = model.PricePerDay!.Value;
+            carToUpdate.Location = model.Location!;
+            carToUpdate.Description = model.Description;
 
-            _unitOfWork.Cars.Update(car);
+            _unitOfWork.Cars.Update(carToUpdate);
             await _unitOfWork.CompleteAsync();
 
             return RedirectToAction("HostDashboard", "Home");
@@ -195,6 +198,7 @@ namespace Rental.Controllers
         // POST: /Car/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Host")]
         public async Task<IActionResult> Delete(int id)
         {
             var car = await _unitOfWork.Cars.GetByIdAsync(id);
@@ -223,6 +227,154 @@ namespace Rental.Controllers
             await _unitOfWork.CompleteAsync();
 
             return RedirectToAction("HostDashboard", "Home");
+        }
+
+        // GET: /Car/Requests
+        [HttpGet]
+        [Authorize(Roles = "Host")]
+        public async Task<IActionResult> Requests()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var requests = await _unitOfWork.Bookings.GetRequestsByHostAsync(user.Id);
+            return View(requests);
+        }
+
+        // GET: /Car/Bookings
+        [HttpGet]
+        [Authorize(Roles = "Host")]
+        public async Task<IActionResult> Bookings()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var bookings = await _unitOfWork.Bookings.GetBookingsByHostAsync(user.Id);
+            return View(bookings);
+        }
+
+        // POST: /Car/ApproveBooking/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Host")]
+        public async Task<IActionResult> ApproveBooking(int id)
+        {
+            var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(id);
+            if (booking == null) return NotFound();
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            if (booking.Car.HostId != user.Id) return Forbid();
+
+            booking.Status = BookingStatus.Approved;
+            _unitOfWork.Bookings.Update(booking);
+            await _unitOfWork.CompleteAsync();
+
+            return RedirectToAction(nameof(Requests));
+        }
+
+        // POST: /Car/RejectBooking/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Host")]
+        public async Task<IActionResult> RejectBooking(int id)
+        {
+            var booking = await _unitOfWork.Bookings.GetBookingWithDetailsAsync(id);
+            if (booking == null) return NotFound();
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            if (booking.Car.HostId != user.Id) return Forbid();
+
+            booking.Status = BookingStatus.Rejected;
+            _unitOfWork.Bookings.Update(booking);
+            await _unitOfWork.CompleteAsync();
+
+            return RedirectToAction(nameof(Requests));
+        }
+
+        // GET: /Car/Rent/5
+        [HttpGet]
+        [Authorize(Roles = "Renter")]
+        public async Task<IActionResult> Rent(int id)
+        {
+            var car = await _unitOfWork.Cars.GetByIdAsync(id);
+            if (car == null || car.Status != CarStatus.Approved)
+                return NotFound();
+
+            // prevent owner from renting own car
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null && car.HostId == user.Id)
+                return Forbid();
+
+            var vm = new BookingCreateViewModel
+            {
+                CarId = car.Id,
+                CarTitle = $"{car.Brand} {car.Model}",
+                StartDate = DateTime.UtcNow.Date,
+                EndDate = DateTime.UtcNow.Date.AddDays(1),
+                PricePerDay = car.PricePerDay
+            };
+
+            return View(vm);
+        }
+
+        // POST: /Car/Rent
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Renter")]
+        public async Task<IActionResult> Rent(BookingCreateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var car = await _unitOfWork.Cars.GetByIdAsync(model.CarId);
+            if (car == null || car.Status != CarStatus.Approved)
+                return NotFound();
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToAction("Login", "Account");
+
+            if (car.HostId == user.Id)
+                return Forbid();
+
+            if (model.EndDate < model.StartDate)
+            {
+                ModelState.AddModelError("", "End date must be after start date.");
+                return View(model);
+            }
+
+            // NEW: availability check to prevent overlapping bookings
+            var hasOverlap = await _unitOfWork.Bookings.HasOverlappingBookingAsync(car.Id, model.StartDate, model.EndDate);
+            if (hasOverlap)
+            {
+                ModelState.AddModelError("", "Selected dates are not available for this car. Please choose different dates.");
+                return View(model);
+            }
+
+            var days = (model.EndDate.Date - model.StartDate.Date).Days;
+            if (days < 1) days = 1;
+
+            var booking = new Booking
+            {
+                CarId = car.Id,
+                RenterId = user.Id,
+                StartDate = model.StartDate.Date,
+                EndDate = model.EndDate.Date,
+                TotalPrice = car.PricePerDay * days,
+                Status = BookingStatus.Requested
+            };
+
+            await _unitOfWork.Bookings.AddAsync(booking);
+            await _unitOfWork.CompleteAsync();
+
+            // Redirect renter to their dashboard (or a confirmation page)
+            return RedirectToAction("RenterDashboard", "Home");
         }
     }
 }
