@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<Rental.Models.Car>
 
 @{
+    ViewData["Title"] = "Host Dashboard";
+}
     Layout = null;
 }
 <!DOCTYPE html>
@@ -88,6 +90,23 @@
         <div class="table-header">
             <h2>My Cars</h2>
 
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>My Cars</h1>
+
+    @* Host actions: add car, view booking requests, view confirmed bookings *@
+    <div class="d-flex gap-2">
+        @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Host"))
+        {
+            <a asp-area="" asp-controller="Car" asp-action="Create" class="btn btn-primary">Add New Car</a>
+            <a asp-area="" asp-controller="Car" asp-action="Requests" class="btn btn-outline-warning">Booking Requests</a>
+            <a asp-area="" asp-controller="Car" asp-action="Bookings" class="btn btn-outline-success">Confirmed Bookings</a>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary">Register as Host</a>
+        }
+    </div>
+</div>
             @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Host"))
             {
                 <a asp-controller="Car" asp-action="Create" class="btn-add-car">+ Add New Car</a>
