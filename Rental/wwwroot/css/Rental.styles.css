@@ -1,6 +1,10 @@
-﻿html {
+﻿
+/* ===== Smooth Scroll + Offset Fix ===== */
+html {
     scroll-behavior: smooth; /* smooth scrolling */
+    scroll-padding-top: 120px; /* offset for fixed navbar height */
 }
+
 /* ===== Custom Navbar (black → yellow blend) ===== */
 
 /*navbar for every other dashboards except index */
@@ -31,8 +35,8 @@
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
         transform: translateY(-1px);
     }
-    /* Logo / brand area */
 
+    /* Logo / brand area */
     .custom-navbar .logo {
         display: flex;
         align-items: center;
@@ -42,10 +46,10 @@
     }
 
         .custom-navbar .logo i {
-            color: #FFB800; /* yellow icon */
+            color: #FFB800;
         }
-/* Brand text colors */
 
+/* Brand text colors */
 .brand-text {
     text-decoration: none;
     display: flex;
@@ -54,15 +58,16 @@
 }
 
 .brand-main {
-    color: #f9fafb; /* white */
+    color: #f9fafb;
 }
 
 .brand-highlight {
-    color: #FFB800; /* yellow */
+    color: #FFB800;
 }
-/* Nav links center area */
 
-.custom-navbar .nav-links, .custom-navbar .auth-links {
+/* Nav links */
+.custom-navbar .nav-links,
+.custom-navbar .auth-links {
     list-style: none;
     display: flex;
     gap: 20px;
@@ -80,14 +85,15 @@
     }
 
         .custom-navbar .nav-links li a:hover {
-            color: #FFB800; /* yellow hover */
+            color: #FFB800;
         }
-    /* Auth buttons (Login / Register) */
 
-    .custom-navbar .auth-links a, .custom-navbar .auth-links button {
+    /* Auth buttons */
+    .custom-navbar .auth-links a,
+    .custom-navbar .auth-links button {
         font-size: 18px;
         padding: 10px 22px;
-        border-radius: 999px; /* pill buttons */
+        border-radius: 999px;
         border: 1px solid rgba(255, 255, 255, 0.6);
         background: transparent;
         color: #f9fafb;
@@ -95,11 +101,11 @@
         transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
-        .custom-navbar .auth-links a:hover, .custom-navbar .auth-links button:hover {
+        .custom-navbar .auth-links a:hover,
+        .custom-navbar .auth-links button:hover {
             background-color: rgba(0, 0, 0, 0.2);
             border-color: #ffffff;
         }
-        /* Highlighted Register button */
 
         .custom-navbar .auth-links a.primary {
             background: #FFB800;
@@ -114,6 +120,7 @@
                 border-color: #f59e0b;
                 color: #111827;
             }
+
 /* Main content spacing */
 
 body {

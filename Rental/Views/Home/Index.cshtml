@@ -59,54 +59,6 @@
 </section>
 
 
-<!-- =================== Cars section =================== -->
-<div class="container my-5" id="cars">
-    <h2 class="mb-4">Available Cars</h2>
-
-    @if (Model == null || !Model.Any())
-    {
-        <div class="alert alert-info">No cars available right now.</div>
-    }
-    else
-    {
-        <div class="row g-4">
-            @foreach (var car in Model)
-            {
-                <div class="col-sm-6 col-md-4 col-lg-3">
-                    <div class="card h-100">
-                        @if (!string.IsNullOrEmpty(car.ImagePath))
-                        {
-                            <img src="@car.ImagePath" class="card-img-top" alt="@($"{car.Brand} {car.Model}")" style="height:160px;object-fit:cover;" />
-                        }
-                        else
-                        {
-                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height:160px;">
-                                <i class="fa fa-car fa-2x"></i>
-                            </div>
-                        }
-
-                        <div class="card-body">
-                            <h5 class="card-title">@car.Brand @car.Model</h5>
-                            <p class="card-text mb-1"><strong>Type:</strong> @car.CarType</p>
-                            <p class="card-text mb-1"><strong>Fuel:</strong> @car.FuelType</p>
-                            <p class="card-text mb-2"><strong>Price/day:</strong> @car.PricePerDay.ToString("C")</p>
-
-                            <div class="d-flex">
-                                <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-primary">View Details</a>
-
-                                @* Rent button visible only to authenticated Renters and only for approved cars *@
-                                @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Renter") && car.Status == Rental.Models.CarStatus.Approved)
-                                {
-                                    <a asp-controller="Car" asp-action="Rent" asp-route-id="@car.Id" class="btn btn-sm btn-success ms-2">Rent</a>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
-</div>
 
 
 <!-- ====================== ABOUT =========================== -->
@@ -177,6 +129,67 @@
 </section>
 
 
+<!-- =================== Cars section =================== -->
+<div class="container my-5" id="cars">
+    <h2 class="mb-4">Available Cars</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">No cars available right now.</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var car in Model)
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(car.ImagePath))
+                        {
+                            <img src="@car.ImagePath" class="card-img-top" alt="@($"{car.Brand} {car.Model}")" style="height:160px;object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height:160px;">
+                                <i class="fa fa-car fa-2x"></i>
+                            </div>
+                        }
+
+                        <div class="card-body">
+                            <h5 class="card-title">@car.Brand @car.Model</h5>
+                            <p class="card-text mb-1"><strong>Type:</strong> @car.CarType</p>
+                            <p class="card-text mb-1"><strong>Fuel:</strong> @car.FuelType</p>
+                            <p class="card-text mb-2"><strong>Price/day:</strong> @car.PricePerDay.ToString("C")</p>
+
+                            <div class="d-flex">
+                                <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-primary">View Details</a>
+
+                                @* Rent button visible only to authenticated Renters and only for approved cars *@
+                                @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Renter") && car.Status == Rental.Models.CarStatus.Approved)
+                                {
+                                    <a asp-controller="Car" asp-action="Rent" asp-route-id="@car.Id" class="btn btn-sm btn-success ms-2">Rent</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+
+
+<!-- ====================== MINI HERO ======================= -->
+<div class="hero-bg">
+    <div class="hero-content">
+        <p>RENT NOW</p>
+        <h1>Join Our Family</h1>
+    </div>
+</div>
+
+
 <!-- ====================== SERVICES ======================== -->
 <section class="services-section py-5">
 
@@ -238,12 +251,3 @@
         </div>
     </div>
 </section>
-
-
-<!-- ====================== MINI HERO ======================= -->
-<div class="hero-bg">
-    <div class="hero-content">
-        <p>RENT NOW</p>
-        <h1>Join Our Family</h1>
-    </div>
-</div>

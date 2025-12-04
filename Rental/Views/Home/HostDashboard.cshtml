@@ -1,93 +1,359 @@
 ﻿@model IEnumerable<Rental.Models.Car>
 
 @{
-    ViewData["Title"] = "Host Dashboard";
-    
+    Layout = null;
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Host Dashboard</title>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>My Cars</h1>
-    @* Show Add button only for authenticated Hosts; otherwise provide a registration link *@
-    @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Host"))
-    {
-        <a asp-area="" asp-controller="Car" asp-action="Create" class="btn btn-primary">Add New Car</a>
-    }
-    else
-    {
-        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary">Register as Host</a>
-    }
-</div>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
 
-@if (Model == null || !Model.Any())
-{
-    <div class="alert alert-info">You have not added any cars yet.</div>
-}
-else
-{
-    <div class="table-responsive">
-        <table class="table table-striped align-middle">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Image</th>
-                    <th>Brand / Model</th>
-                    <th>Type</th>
-                    <th>Year</th>
-                    <th>Seats</th>
-                    <th>Price/day</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var car in Model)
-                {
-                    <tr>
-                        <td>@car.Id</td>
-                        <td style="width:120px;">
-                            @if (!string.IsNullOrEmpty(car.ImagePath))
-                            {
-                                <img src="@car.ImagePath" alt="" style="width:110px;height:65px;object-fit:cover;border-radius:4px;" />
-                            }
-                            else
-                            {
-                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width:110px;height:65px;">
-                                    <i class="fa fa-car"></i>
-                                </div>
-                            }
-                        </td>
-                        <td>@car.Brand<br /><small class="text-muted">@car.Model</small></td>
-                        <td>@car.CarType</td>
-                        <td>@car.Year</td>
-                        <td>@car.Seats</td>
-                        <td>@car.PricePerDay.ToString("C")</td>
-                        <td>
-                            @switch (car.Status)
-                            {
-                                case Rental.Models.CarStatus.Pending:
-                                    <span class="badge bg-warning text-dark">Pending</span>;
-                                    break;
-                                case Rental.Models.CarStatus.Approved:
-                                    <span class="badge bg-success">Approved</span>;
-                                    break;
-                                case Rental.Models.CarStatus.Rejected:
-                                    <span class="badge bg-danger">Rejected</span>;
-                                    break;
-                            }
-                        </td>
-                        <td>
-                            <div class="d-flex gap-2">
-                                <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-outline-primary">Details</a>
-                                <a asp-controller="Car" asp-action="Edit" asp-route-id="@car.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                <form asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id" method="post" class="m-0">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this car?');">Delete</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<body>
+
+    <!-- ================= HOST NAVBAR ================= -->
+    <nav class="host-navbar">
+
+        <!-- Logo -->
+        <div class="logo">
+            <a asp-controller="Home" asp-action="Index" class="brand-text">
+                <span class="brand-main">Vroomly</span>
+                <span class="brand-highlight">Rentals</span>
+            </a>
+        </div>
+
+        <!-- Links -->
+        <ul class="nav-links">
+            <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li><a asp-controller="Car" asp-action="Create">Add Car</a></li>
+        </ul>
+
+        <!-- Logout -->
+        <ul class="auth-links">
+            <li>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
+        </ul>
+
+    </nav>
+
+    <!-- ================= WELCOME BANNER ================= -->
+    <div class="welcome-banner">
+        <div class="banner-left">
+            <h2>Welcome, @User.Identity.Name!</h2>
+            <p>Manage your cars, track approval statuses, and keep everything up to date.</p>
+        </div>
     </div>
-}
+
+
+    <!-- ================= DASHBOARD CONTENT ================= -->
+    <div class="host-dashboard-container">
+
+        <!-- ======= HEADER ======= -->
+        <div class="dashboard-header">
+            <h1>Host Dashboard</h1>
+            <p>Manage your listed cars, track approval status, and keep your fleet up to date.</p>
+        </div>
+
+        <!-- ======= STAT CARDS ======= -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <h2>@Model.Count()</h2>
+                <p>Total Cars</p>
+            </div>
+
+            <div class="stat-card">
+                <h2>@Model.Count(c => c.Status == Rental.Models.CarStatus.Approved)</h2>
+                <p>Approved</p>
+            </div>
+
+            <div class="stat-card">
+                <h2>@Model.Count(c => c.Status == Rental.Models.CarStatus.Pending)</h2>
+                <p>Pending</p>
+            </div>
+
+            <div class="stat-card">
+                <h2>@Model.Count(c => c.Status == Rental.Models.CarStatus.Rejected)</h2>
+                <p>Rejected</p>
+            </div>
+        </div>
+
+        <!-- ======= TABLE HEADER ======= -->
+        <div class="table-header">
+            <h2>My Cars</h2>
+
+            @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Host"))
+            {
+                <a asp-controller="Car" asp-action="Create" class="btn-add-car">+ Add New Car</a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn-register-host">Register as Host</a>
+            }
+        </div>
+
+        <!-- ======= CARS TABLE ======= -->
+        @if (!Model.Any())
+        {
+            <div class="empty-box">You have not added any cars yet.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table modern-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Model</th>
+                            <th>Type</th>
+                            <th>Year</th>
+                            <th>Seats</th>
+                            <th>Price/day</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var car in Model)
+                        {
+                            <tr>
+                                <td style="width:120px;">
+                                    @if (!string.IsNullOrEmpty(car.ImagePath))
+                                    {
+                                        <img src="@car.ImagePath" class="car-img" />
+                                    }
+                                    else
+                                    {
+                                        <div class="placeholder-img"><i class="fa fa-car"></i></div>
+                                    }
+                                </td>
+
+                                <td>
+                                    <strong>@car.Brand</strong>
+                                    <br />
+                                    <small class="text-muted">@car.Model</small>
+                                </td>
+
+                                <td>@car.CarType</td>
+                                <td>@car.Year</td>
+                                <td>@car.Seats</td>
+                                <td>@car.PricePerDay.ToString("C")</td>
+
+                                <td>
+                                    @switch (car.Status)
+                                    {
+                                        case Rental.Models.CarStatus.Pending:
+                                            <span class="badge-status pending">Pending</span>
+                                            ; break;
+                                        case Rental.Models.CarStatus.Approved:
+                                            <span class="badge-status approved">Approved</span>
+                                            ; break;
+                                        case Rental.Models.CarStatus.Rejected:
+                                            <span class="badge-status rejected">Rejected</span>
+                                            ; break;
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="action-buttons">
+                                        <a asp-controller="Car" asp-action="Details" asp-route-id="@car.Id" class="btn-action blue">Details</a>
+                                        <a asp-controller="Car" asp-action="Edit" asp-route-id="@car.Id" class="btn-action gray">Edit</a>
+
+                                        <form asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id" method="post" class="m-0">
+                                            @Html.AntiForgeryToken()
+                                            <button onclick="return confirm('Delete this car?');" class="btn-action red">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+
+    <!-- ===================== SCRIPTS ===================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+
+
+    <!-- ===================== CSS ===================== -->
+    <style>
+
+        body {
+            padding-top: 120px;
+        }
+
+        /* NAVBAR ------------------------------ */
+        .host-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #000, #181818, #FFB800);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+            z-index: 9999;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            display: flex;
+            gap: 5px;
+
+        }
+
+            .logo a {
+                text-decoration: none !important;
+            }
+
+
+        .brand-main {
+            color: white;
+        }
+
+        .brand-highlight {
+            color: #FFB800;
+        }
+
+        .nav-links, .auth-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            align-items: center;
+        }
+
+            .nav-links li a {
+                color: white;
+                font-size: 18px;
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+                .nav-links li a:hover {
+                    color: #FFB800;
+                }
+
+            .auth-links button {
+                padding: 8px 20px;
+                border-radius: 30px;
+                background: transparent;
+                border: 1px solid #fff;
+                color: #fff;
+                cursor: pointer;
+            }
+
+                .auth-links button:hover {
+                    background: rgba(255,255,255,0.1);
+                }
+
+        /* WELCOME BANNER --------------------------- */
+        .welcome-banner {
+            background: linear-gradient(90deg, #000, #181818, #FFB800);
+            color: white;
+            padding: 25px 40px;
+            border-radius: 12px;
+            margin: 20px 40px;
+            margin-top: -10px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .animated-icon {
+            margin-left: 15px;
+            vertical-align: middle;
+        }
+
+        /* CONTENT WRAPPER --------------------------- */
+        .host-dashboard-container {
+            padding: 40px 50px;
+        }
+
+        /* STAT CARDS --------------------------- */
+        .stats-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            flex: 1;
+            padding: 25px;
+            text-align: center;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        /* TABLE --------------------------- */
+        .modern-table {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .car-img {
+            width: 110px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .approved {
+            background: #28a745;
+            color: #fff;
+        }
+
+        .pending {
+            background: #ffc107;
+            color: #111;
+        }
+
+        .rejected {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .btn-action {
+            padding: 6px 14px;
+            border-radius: 6px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .blue {
+            background: #0d6efd;
+        }
+
+        .gray {
+            background: #6c757d;
+        }
+
+        .red {
+            background: #dc3545;
+        }
+
+    </style>
+
+</body>
+</html>
