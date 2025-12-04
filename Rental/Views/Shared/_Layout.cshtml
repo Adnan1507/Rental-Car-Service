@@ -1,21 +1,4 @@
-﻿@using System
-@{
-    Layout = null;
-
-    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
-    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
-
-    // Show the same fixed navbar on Home index and on dashboards
-    var showNavbar = string.Equals(controller, "Home", StringComparison.OrdinalIgnoreCase)
-                     && (
-                         string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase)
-                         || string.Equals(action, "HostDashboard", StringComparison.OrdinalIgnoreCase)
-                         || string.Equals(action, "AdminDashboard", StringComparison.OrdinalIgnoreCase)
-                         || string.Equals(action, "RenterDashboard", StringComparison.OrdinalIgnoreCase)
-                        );
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,102 +8,75 @@
     <!-- CSS libraries -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Rental.styles.css" asp-append-version="true" />
 
-    <!-- MDB and Font Awesome (third-party) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+          rel="stylesheet" />
+
+    <!-- Font Awesome icons -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
           crossorigin="anonymous"
           referrerpolicy="no-referrer" />
 
-    @if (showNavbar)
-    {
-        <style>
-            /* Adjust this value if your navbar height differs */
-            :root {
-                --navbar-height: 72px;
-            }
-
-            .custom-navbar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: var(--navbar-height);
-                z-index: 1030;
-                background: #fff;
-                display: flex;
-                align-items: center;
-                padding: 0 1rem;
-                box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            }
-
-            /* Apply top spacing only to the page container when navbar is present */
-            .with-navbar {
-                padding-top: calc(var(--navbar-height) + 1rem);
-            }
-
-            /* Small visual helpers for the nav items to match home theme */
-            .custom-navbar .logo { margin-right: 1.5rem; }
-            .custom-navbar .nav-links { list-style: none; margin: 0; padding: 0; display: flex; gap: 1rem; }
-            .custom-navbar .auth-links { list-style: none; margin: 0; padding: 0; margin-left: auto; display:flex; gap:0.75rem; align-items:center;}
-            .custom-navbar a { color: inherit; text-decoration: none; }
-        </style>
-    }
-
-    <!-- Custom styles LAST so they win -->
-    <link rel="stylesheet" href="~/css/Rental.styles.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
-        @if (showNavbar)
-        {
-            <nav class="custom-navbar" id="mainNavbar">
-                <!-- Logo -->
-                <div class="logo">
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-text">
-                        <span class="brand-main">Vroomly</span>
-                        <span class="brand-highlight">Rentals</span>
-                    </a>
-                </div>
+        <!-- Navigation bar -->
+        <nav class="custom-navbar" id="mainNavbar">
 
-                <!-- Center menu links -->
-                <ul class="nav-links">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a href="/#about">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Services">Services</a></li>
-                    <li><a asp-area="" asp-controller="Cars" asp-action="Index">Cars</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
+            <!-- Logo -->
+            <div class="logo">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-text">
+                    <span class="brand-main">Vroomly</span>
+                    <span class="brand-highlight">Rentals</span>
+                </a>
+            </div>
 
-                <!-- Auth buttons (keeps logout available on dashboards) -->
-                <ul class="auth-links">
-                    @if (User?.Identity?.IsAuthenticated == true)
-                    {
-                        <li>
-                            <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                                <button type="submit" class="btn btn-link p-0">Logout</button>
-                            </form>
-                        </li>
-                    }
-                    else
-                    {
-                        <li><a asp-controller="Account" asp-action="Login">Login</a></li>
-                        <li><a asp-controller="Account" asp-action="Register" class="primary">Register</a></li>
-                    }
-                </ul>
-            </nav>
-        }
+            <!-- Center menu links -->
+            <ul class="nav-links">
+                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                <li><a href="/#about">About</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Services">Services</a></li>
+                <li><a asp-area="" asp-controller="Cars" asp-action="Index">Cars</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+            </ul>
+
+            <!-- Auth buttons -->
+            <ul class="auth-links">
+                @if (User?.Identity?.IsAuthenticated == true)
+                {
+                    <li>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                            <!-- Logout button -->
+                            <button type="submit">Logout</button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <!-- Login -->
+                    <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+
+                    <!-- Register -->
+                    <li><a asp-controller="Account" asp-action="Register" class="primary">Register</a></li>
+                }
+            </ul>
+        </nav>
     </header>
 
-    <div class="container @(showNavbar ? "with-navbar" : "")">
+    <div class="container">
         <!-- main content -->
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+
+    <!-- ======================= FOOTER ======================== -->
     <footer class="site-footer">
+
         <section class="social-strip d-flex justify-content-center justify-content-lg-between p-4 border-bottom ">
             <div class="me-5 d-none d-lg-block">
                 <span>Get connected with us on social networks:</span>
@@ -138,17 +94,10 @@
         <section class="footer-top">
             <div class="container text-center text-md-start mt-5">
                 <div class="row mt-3">
+                    <!-- Your original footer blocks -->
                     <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
                         <h6 class="text-uppercase fw-bold mb-4"><i class="fas fa-gem me-3"></i>VROOMLY RENTALS</h6>
-                        <p>
-                            Have questions? We’d love to hear from you.
-
-                            Join our community—let’s build something great.
-
-                            Follow us for updates, news & more.
-
-                            Let’s stay connected!
-                        </p>
+                        <p>Have questions? We’d love to hear from you.</p>
                     </div>
 
                     <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
@@ -169,8 +118,6 @@
                         <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
                         <p><i class="fas fa-home me-3"></i> Chittagong, CTG 10012, BD</p>
                         <p><i class="fas fa-envelope me-3"></i> info@example.com</p>
-                        <p><i class="fas fa-phone me-3"></i> + 01 609 123 456</p>
-                        <p><i class="fas fa-print me-3"></i> + 01 809 123 456</p>
                     </div>
                 </div>
             </div>
@@ -179,7 +126,7 @@
         <div class="footer-bottom">
             <div class="container text-center">
                 <span>&copy; 2025 Vroomly Rentals •</span>
-                <a asp-area="" asp-controller="Home" asp-action="Privacy" class="footer-privacy">Privacy Policy</a>
+                <a asp-controller="Home" asp-action="Privacy" class="footer-privacy">Privacy Policy</a>
             </div>
         </div>
     </footer>

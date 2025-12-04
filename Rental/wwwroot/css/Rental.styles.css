@@ -3,6 +3,12 @@
 }
 /* ===== Custom Navbar (black → yellow blend) ===== */
 
+/*navbar for every other dashboards except index */
+.navbar-solid {
+    background: linear-gradient(90deg, #000000, #181818, #FFB800) !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+}
+
 .custom-navbar {
     position: fixed; /* stays at top */
     top: 0;
@@ -332,3 +338,5 @@ body {
     .site-footer .copyright {
         background-color: transparent !important;
     }
+
+
