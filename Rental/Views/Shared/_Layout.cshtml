@@ -1,4 +1,23 @@
-﻿<!DOCTYPE html>
+﻿@using System
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+    // DASHBOARD PAGES → Always show solid navbar
+    bool isDashboard =
+        (controller == "Home" && action == "AdminDashboard") ||
+        (controller == "Home" && action == "HostDashboard") ||
+        (controller == "Home" && action == "RenterDashboard");
+
+    // HOME PAGE → Transparent navbar + scroll animation
+    bool isHomeLanding = controller == "Home" && action == "Index";
+
+    // Show navbar everywhere except login/register
+    bool showNavbar = !(controller == "Account" &&
+                       (action == "Login" || action == "Register"));
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,72 +31,97 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
           rel="stylesheet" />
-
-    <!-- Font Awesome icons -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer" />
+          crossorigin="anonymous" />
 
+    <style>
+        :root {
+            --navbar-height: 72px;
+        }
+
+        .with-navbar {
+            padding-top: var(--navbar-height);
+        }
+
+        /* Solid navbar for dashboards + all non-home pages */
+        .navbar-solid {
+            background: linear-gradient(90deg, #000000, #181818, #FFB800) !important;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+        }
+    </style>
 </head>
 
 <body>
+
+    <!-- ==================== NAVBAR ==================== -->
     <header>
-        <!-- Navigation bar -->
-        <nav class="custom-navbar" id="mainNavbar">
+        @if (showNavbar)
+        {
+            <nav id="mainNavbar"
+                 class="custom-navbar @(isHomeLanding ? "" : "navbar-solid")">
 
-            <!-- Logo -->
-            <div class="logo">
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-text">
-                    <span class="brand-main">Vroomly</span>
-                    <span class="brand-highlight">Rentals</span>
-                </a>
-            </div>
+                <!-- Logo -->
+                <div class="logo">
+                    <a asp-controller="Home" asp-action="Index" class="brand-text">
+                        <span class="brand-main">Vroomly</span>
+                        <span class="brand-highlight">Rentals</span>
+                    </a>
+                </div>
 
-            <!-- Center menu links -->
-            <ul class="nav-links">
-                <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                <li><a href="/#about">About</a></li>
-                <li><a asp-area="" asp-controller="Home" asp-action="Services">Services</a></li>
-                <li><a asp-area="" asp-controller="Cars" asp-action="Index">Cars</a></li>
-                <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-            </ul>
+                <!-- Links -->
+                <ul class="nav-links">
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a href="/#about">About</a></li>
+                    <li><a asp-controller="Home" asp-action="Services">Services</a></li>
+                    <li><a asp-controller="Cars" asp-action="Index">Cars</a></li>
+                    <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                </ul>
 
-            <!-- Auth buttons -->
-            <ul class="auth-links">
-                @if (User?.Identity?.IsAuthenticated == true)
-                {
-                    <li>
-                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
-                            <!-- Logout button -->
-                            <button type="submit">Logout</button>
-                        </form>
-                    </li>
-                }
-                else
-                {
-                    <!-- Login -->
-                    <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+                <!-- Authentication Links -->
+                <ul class="auth-links">
+                    @if (User?.Identity?.IsAuthenticated == true)
+                    {
+                        <li>
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                                <button type="submit" class="btn btn-link p-0">Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li><a asp-controller="Account" asp-action="Register" class="primary">Register</a></li>
+                    }
+                </ul>
 
-                    <!-- Register -->
-                    <li><a asp-controller="Account" asp-action="Register" class="primary">Register</a></li>
-                }
-            </ul>
-        </nav>
+            </nav>
+        }
     </header>
 
-    <div class="container">
-        <!-- main content -->
-        <main role="main" class="pb-3">
+    <!-- ==================== PAGE CONTENT ==================== -->
+    @if (isHomeLanding)
+    {
+        <!-- Home page uses full width -->
+        <main>
             @RenderBody()
         </main>
-    </div>
+    }
+    else
+    {
+        <!-- Dashboards & all other pages use container -->
+        <div class="container with-navbar">
+            <main class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    }
 
 
-    <!-- ======================= FOOTER ======================== -->
+    <!-- ==================== FOOTER ==================== -->
     <footer class="site-footer">
 
-        <section class="social-strip d-flex justify-content-center justify-content-lg-between p-4 border-bottom ">
+        <section class="social-strip d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
             <div class="me-5 d-none d-lg-block">
                 <span>Get connected with us on social networks:</span>
             </div>
@@ -94,9 +138,11 @@
         <section class="footer-top">
             <div class="container text-center text-md-start mt-5">
                 <div class="row mt-3">
-                    <!-- Your original footer blocks -->
+
                     <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-                        <h6 class="text-uppercase fw-bold mb-4"><i class="fas fa-gem me-3"></i>VROOMLY RENTALS</h6>
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3"></i>VROOMLY RENTALS
+                        </h6>
                         <p>Have questions? We’d love to hear from you.</p>
                     </div>
 
@@ -119,6 +165,7 @@
                         <p><i class="fas fa-home me-3"></i> Chittagong, CTG 10012, BD</p>
                         <p><i class="fas fa-envelope me-3"></i> info@example.com</p>
                     </div>
+
                 </div>
             </div>
         </section>
@@ -129,26 +176,28 @@
                 <a asp-controller="Home" asp-action="Privacy" class="footer-privacy">Privacy Policy</a>
             </div>
         </div>
+
     </footer>
 
-    <!-- JS libraries -->
+
+    <!-- ==================== SCRIPTS ==================== -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <!-- Navbar scroll shadow/gradient -->
     <script>
-        window.addEventListener('scroll', function () {
-            var nav = document.getElementById('mainNavbar');
-            if (!nav) return;
-            if (window.scrollY > 30) {
-                nav.classList.add('scrolled'); /* apply scrolled style */
-            } else {
-                nav.classList.remove('scrolled'); /* remove style */
-            }
-        });
+        const nav = document.getElementById('mainNavbar');
+        const isHome = "@isHomeLanding" === "True";
+
+        // Only home page should animate the navbar
+        if (isHome) {
+            window.addEventListener("scroll", () => {
+                if (window.scrollY > 30) nav.classList.add("scrolled");
+                else nav.classList.remove("scrolled");
+            });
+        }
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
