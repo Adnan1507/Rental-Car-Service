@@ -67,5 +67,6 @@ namespace Rental.Controllers
 
             return RedirectToAction(nameof(PendingCars));
         }
+
     }
 }

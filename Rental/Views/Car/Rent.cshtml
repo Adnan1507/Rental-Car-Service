@@ -9,6 +9,8 @@
 <form asp-action="Rent" method="post">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="CarId" />
+    <input type="hidden" asp-for="CarTitle" />
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
     <div class="mb-3">
         <label asp-for="StartDate" class="form-label"></label>
@@ -23,9 +25,14 @@
     </div>
 
     <div class="mb-3">
-        <p><strong>Price per day:</strong> @Model.PricePerDay.ToString("C")</p>
+        <p><strong>Price per day:</strong>
+            <span id="pricePerDay" data-price="@Model.PricePerDay">@Model.PricePerDay.ToString("C")</span></p>
         <p><strong>Estimated total:</strong> <span id="estimated">@Model.TotalPrice.ToString("C")</span></p>
     </div>
+
+    <!-- Hidden inputs to carry price values (useful for diagnostics & progressive enhancement) -->
+    <input type="hidden" asp-for="PricePerDay" />
+    <input type="hidden" asp-for="TotalPrice" id="totalPriceInput" />
 
     <button type="submit" class="btn btn-primary">Request Booking</button>
     <a asp-action="Details" asp-route-id="@Model.CarId" class="btn btn-secondary ms-2">Cancel</a>
@@ -34,19 +41,34 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Quick client-side estimated price update
         const startInput = document.querySelector('input[name="StartDate"]');
         const endInput = document.querySelector('input[name="EndDate"]');
         const estimated = document.getElementById('estimated');
-        const pricePerDay = parseFloat('@Model.PricePerDay');
+        const totalPriceInput = document.getElementById('totalPriceInput');
+        const priceElem = document.getElementById('pricePerDay');
+        const pricePerDay = parseFloat(priceElem?.dataset?.price ?? 0);
+
+        function formatCurrency(value) {
+            try {
+                return value.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+            } catch {
+                return value.toFixed(2);
+            }
+        }
 
         function updateEstimate() {
             const s = new Date(startInput.value);
             const e = new Date(endInput.value);
-            if (isNaN(s) || isNaN(e)) return;
+            if (isNaN(s) || isNaN(e)) {
+                estimated.textContent = formatCurrency(0);
+                totalPriceInput.value = 0;
+                return;
+            }
             let days = Math.ceil((e - s) / (1000 * 60 * 60 * 24));
             if (days < 1) days = 1;
-            estimated.textContent = (days * pricePerDay).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+            const total = days * pricePerDay;
+            estimated.textContent = formatCurrency(total);
+            totalPriceInput.value = total;
         }
 
         startInput?.addEventListener('change', updateEstimate);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Rental.Models;
 using Rental.UnitOfWork;
 using Rental.ViewModels;
@@ -12,14 +13,17 @@ namespace Rental.Controllers
         private readonly IUnitofWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _env;
+        private readonly ILogger<CarController>? _logger;
 
         public CarController(IUnitofWork unitOfWork,
                              UserManager<ApplicationUser> userManager,
-                             IWebHostEnvironment env)
+                             IWebHostEnvironment env,
+                             ILogger<CarController>? logger)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _env = env;
+            _logger = logger;
         }
 
         // GET: /Car/Create
@@ -327,14 +331,36 @@ namespace Rental.Controllers
         [Authorize(Roles = "Renter")]
         public async Task<IActionResult> Rent(BookingCreateViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            _logger?.LogDebug("POST /Car/Rent called. Model: {@Model}", model);
 
+            // Attempt to get car even if model binding failed so we can repopulate display fields
             var car = await _unitOfWork.Cars.GetByIdAsync(model.CarId);
             if (car == null || car.Status != CarStatus.Approved)
+            {
+                // If car not found, show 404
                 return NotFound();
+            }
+
+            // Always ensure UI fields are set so the view shows correct info if we redisplay
+            model.CarTitle = $"{car.Brand} {car.Model}";
+            model.PricePerDay = car.PricePerDay;
+
+            if (!ModelState.IsValid)
+            {
+                // If model binding failed (dates missing/invalid), recalc estimated total for UX
+                try
+                {
+                    var daysPreview = (model.EndDate.Date - model.StartDate.Date).Days;
+                    if (daysPreview < 1) daysPreview = 1;
+                    model.TotalPrice = model.PricePerDay * (daysPreview > 0 ? daysPreview : 1);
+                }
+                catch
+                {
+                    model.TotalPrice = 0;
+                }
+
+                return View(model);
+            }
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -346,19 +372,27 @@ namespace Rental.Controllers
             if (model.EndDate < model.StartDate)
             {
                 ModelState.AddModelError("", "End date must be after start date.");
+                // recalc for UX
+                model.TotalPrice = model.PricePerDay;
                 return View(model);
             }
 
-            // NEW: availability check to prevent overlapping bookings
+            // availability check
             var hasOverlap = await _unitOfWork.Bookings.HasOverlappingBookingAsync(car.Id, model.StartDate, model.EndDate);
             if (hasOverlap)
             {
                 ModelState.AddModelError("", "Selected dates are not available for this car. Please choose different dates.");
+                // recompute estimate
+                var days = (model.EndDate.Date - model.StartDate.Date).Days;
+                if (days < 1) days = 1;
+                model.TotalPrice = car.PricePerDay * days;
                 return View(model);
             }
 
-            var days = (model.EndDate.Date - model.StartDate.Date).Days;
-            if (days < 1) days = 1;
+            // compute total server-side (trusted)
+            var bookingDays = (model.EndDate.Date - model.StartDate.Date).Days;
+            if (bookingDays < 1) bookingDays = 1;
+            var totalPrice = car.PricePerDay * bookingDays;
 
             var booking = new Booking
             {
@@ -366,14 +400,14 @@ namespace Rental.Controllers
                 RenterId = user.Id,
                 StartDate = model.StartDate.Date,
                 EndDate = model.EndDate.Date,
-                TotalPrice = car.PricePerDay * days,
+                TotalPrice = totalPrice,
                 Status = BookingStatus.Requested
             };
 
             await _unitOfWork.Bookings.AddAsync(booking);
             await _unitOfWork.CompleteAsync();
 
-            // Redirect renter to their dashboard (or a confirmation page)
+            TempData["SuccessMessage"] = "Booking requested successfully.";
             return RedirectToAction("RenterDashboard", "Home");
         }
     }

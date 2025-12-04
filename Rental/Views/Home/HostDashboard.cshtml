@@ -2,20 +2,24 @@
 
 @{
     ViewData["Title"] = "Host Dashboard";
-    
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>My Cars</h1>
-    @* Show Add button only for authenticated Hosts; otherwise provide a registration link *@
-    @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Host"))
-    {
-        <a asp-area="" asp-controller="Car" asp-action="Create" class="btn btn-primary">Add New Car</a>
-    }
-    else
-    {
-        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary">Register as Host</a>
-    }
+
+    @* Host actions: add car, view booking requests, view confirmed bookings *@
+    <div class="d-flex gap-2">
+        @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Host"))
+        {
+            <a asp-area="" asp-controller="Car" asp-action="Create" class="btn btn-primary">Add New Car</a>
+            <a asp-area="" asp-controller="Car" asp-action="Requests" class="btn btn-outline-warning">Booking Requests</a>
+            <a asp-area="" asp-controller="Car" asp-action="Bookings" class="btn btn-outline-success">Confirmed Bookings</a>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary">Register as Host</a>
+        }
+    </div>
 </div>
 
 @if (Model == null || !Model.Any())
