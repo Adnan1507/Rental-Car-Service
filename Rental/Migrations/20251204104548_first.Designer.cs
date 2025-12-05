@@ -13,7 +13,7 @@ namespace Rental.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20251204104548_first")]
-    partial class first
+    partial class first : Migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

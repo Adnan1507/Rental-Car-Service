@@ -1,10 +1,6 @@
-﻿
-/* ===== Smooth Scroll + Offset Fix ===== */
-html {
+﻿html {
     scroll-behavior: smooth; /* smooth scrolling */
-    scroll-padding-top: 120px; /* offset for fixed navbar height */
 }
-
 /* ===== Custom Navbar (black → yellow blend) ===== */
 
 /*navbar for every other dashboards except index */
@@ -35,8 +31,8 @@ html {
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
         transform: translateY(-1px);
     }
-
     /* Logo / brand area */
+
     .custom-navbar .logo {
         display: flex;
         align-items: center;
@@ -46,10 +42,10 @@ html {
     }
 
         .custom-navbar .logo i {
-            color: #FFB800;
+            color: #FFB800; /* yellow icon */
         }
-
 /* Brand text colors */
+
 .brand-text {
     text-decoration: none;
     display: flex;
@@ -58,16 +54,15 @@ html {
 }
 
 .brand-main {
-    color: #f9fafb;
+    color: #f9fafb; /* white */
 }
 
 .brand-highlight {
-    color: #FFB800;
+    color: #FFB800; /* yellow */
 }
+/* Nav links center area */
 
-/* Nav links */
-.custom-navbar .nav-links,
-.custom-navbar .auth-links {
+.custom-navbar .nav-links, .custom-navbar .auth-links {
     list-style: none;
     display: flex;
     gap: 20px;
@@ -85,15 +80,14 @@ html {
     }
 
         .custom-navbar .nav-links li a:hover {
-            color: #FFB800;
+            color: #FFB800; /* yellow hover */
         }
+    /* Auth buttons (Login / Register) */
 
-    /* Auth buttons */
-    .custom-navbar .auth-links a,
-    .custom-navbar .auth-links button {
+    .custom-navbar .auth-links a, .custom-navbar .auth-links button {
         font-size: 18px;
         padding: 10px 22px;
-        border-radius: 999px;
+        border-radius: 999px; /* pill buttons */
         border: 1px solid rgba(255, 255, 255, 0.6);
         background: transparent;
         color: #f9fafb;
@@ -101,11 +95,11 @@ html {
         transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
-        .custom-navbar .auth-links a:hover,
-        .custom-navbar .auth-links button:hover {
+        .custom-navbar .auth-links a:hover, .custom-navbar .auth-links button:hover {
             background-color: rgba(0, 0, 0, 0.2);
             border-color: #ffffff;
         }
+        /* Highlighted Register button */
 
         .custom-navbar .auth-links a.primary {
             background: #FFB800;
@@ -120,7 +114,6 @@ html {
                 border-color: #f59e0b;
                 color: #111827;
             }
-
 /* Main content spacing */
 
 body {
@@ -208,7 +201,7 @@ body {
 }
 
 
-/* Services section spacing */
+/* ==================== service SECTION ==================== */
 
 .services-section {
     margin-top: 100px;
@@ -271,7 +264,7 @@ body {
     font-weight: bold;
     font-size: 22px;
 }
-/* --- Hero full-width background --- */
+/* ==================== mini hero ==================== */
 
 .hero-bg {
     position: relative;
@@ -289,7 +282,7 @@ body {
     text-align: center;
     overflow: hidden;
     z-index: 0;
-    background-attachment: fixed; /* optional; fine for desktop */
+    /*background-attachment: fixed;*/ /*scrolls over background image */
 }
     /* Hero overlay */
 
@@ -324,7 +317,7 @@ body {
         color: white;
     }
 
-/* FULL FOOTER BACKGROUND COLOR */
+/* ==================== footer SECTION ==================== */
 .site-footer {
     background-color: #222; /* <— change this to any color you want */
     color: #f1f1f1;
@@ -347,3 +340,180 @@ body {
     }
 
 
+/* ==================== cars carousel SECTION ==================== */
+
+.car-carousel-section {
+    width: 100%;
+    padding-top: 40px;
+}
+
+/* Swiper slides */
+.carSwiper {
+    width: 100%;
+    padding-bottom: 60px;
+}
+
+
+/* Slide container */
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+}
+
+/* Car Card */
+.car-card {
+    width: 90%;
+    max-width: 1050px;
+    border-radius: 28px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 10px 38px rgba(0,0,0,0.12);
+    transition: transform .3s ease;
+}
+
+    .car-card:hover {
+        transform: translateY(-6px);
+    }
+
+/* Car Image */
+.car-card-image img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+    border-radius: 28px 28px 0 0;
+    filter: brightness(97%);
+    transition: transform 0.4s ease; /* added */
+}
+
+.car-card:hover .car-card-image img {
+    transform: scale(1.08); /* added */
+}
+
+
+/* Info Panel */
+.car-card-info {
+    background: #f7f7f7;
+    padding: 28px;
+    border-radius: 0 0 28px 28px;
+}
+
+    /* Title */
+    .car-card-info h4 {
+        font-weight: 700;
+    }
+
+/* Details Button */
+.details-btn {
+    background: #f5a623;
+    color: #111;
+    padding: 10px 26px;
+    border-radius: 22px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: .25s;
+}
+
+    .details-btn:hover {
+        background: #e0951c;
+        color: #fff;
+    }
+
+/* Price */
+.price-tag {
+    margin-top: 10px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #f5a623;
+}
+
+.price-day {
+    font-size: 12px;
+    color: #777;
+}
+
+/* Swiper Custom Arrows */
+/* Base arrow style */
+.custom-arrow {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #f4b85a; /* soft yellow like screenshot */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #111;
+    font-size: 12px; /* very small arrow */
+    transition: .25s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+}
+
+    /* Hover effect */
+    .custom-arrow:hover {
+        transform: scale(1.08);
+        background: #e8a846; /* slightly darker yellow */
+    }
+
+/* Remove default Swiper icons */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    display: none;
+}
+
+
+/* ==================== car carousel rent button ==================== */
+.rent-btn {
+    background: #7be495; /* light green */
+    color: #0b3d2e; /* dark green text */
+    padding: 10px 26px;
+    border-radius: 22px;
+    font-weight: 600;
+    margin-left: 8px;
+    text-decoration: none;
+    display: inline-block;
+    transition: .25s ease;
+}
+
+    .rent-btn:hover {
+        background: #63cf7f;
+        color: #fff;
+    }
+
+
+/* ==================== feedback SECTION ==================== */
+
+/* Input fields - rounded, elegant */
+.feedback-input {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    transition: 0.3s ease;
+}
+
+    .feedback-input:focus {
+        border-color: #f5a623;
+        box-shadow: 0 0 0 4px rgba(245, 166, 35, 0.25);
+    }
+
+/* Submit button - theme styled */
+.feedback-btn {
+    padding: 12px 0;
+    background: #f5a623;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: 0.3s ease;
+}
+
+    .feedback-btn:hover {
+        background: #d8901d;
+        transform: translateY(-3px);
+    }
+
+/* Section shadow & radius */
+#contact .shadow-lg {
+    border-radius: 22px;
+}
